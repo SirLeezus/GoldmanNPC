@@ -43,6 +43,12 @@ public class PU {
         return w.toString();
     }
 
+    public void loadNPCList() {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        SQLite SQL = plugin.getSqLite();
+        for (String name : SQL.getNPCNames()) plugin.getData().addActiveNPC(name);
+    }
+
     public void removeNPCs() {
 
         GoldmanNPC plugin = GoldmanNPC.getPlugin();

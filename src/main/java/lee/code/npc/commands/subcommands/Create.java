@@ -45,6 +45,7 @@ public class Create extends SubCommand {
                 SQL.createNPC(name, location, "NONE", "PLAINS", "n");
                 SQL.loadNPC(name);
                 plugin.getData().setSelectedNPC(uuid, name);
+                plugin.getData().addActiveNPC(name);
                 player.sendMessage("NPC created!");
             }
         }

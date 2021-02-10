@@ -46,6 +46,8 @@ public class Name extends SubCommand {
                 SQL.setName(npc, name);
                 SQL.loadNPC(name);
                 plugin.getData().setSelectedNPC(uuid, name);
+                plugin.getData().removeActiveNPC(npc);
+                plugin.getData().addActiveNPC(name);
             } else player.sendMessage("You need to select a NPC.");
         }
     }

@@ -28,6 +28,7 @@ public class GoldmanNPC extends JavaPlugin {
 
         pU.removeNPCs();
         sqLite.loadNPCs();
+        pU.loadNPCList();
     }
 
     @Override
