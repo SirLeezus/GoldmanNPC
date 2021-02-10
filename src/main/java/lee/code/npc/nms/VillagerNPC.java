@@ -27,6 +27,11 @@ public class VillagerNPC extends EntityVillager {
         this.goalSelector.a(1, new PathfinderGoalRandomLookaround(this));
     }
 
+    @Override
+    public NBTTagCompound save(NBTTagCompound nbttagcompound){
+        return nbttagcompound;
+    }
+
     private void removeAI() {
 
         try {

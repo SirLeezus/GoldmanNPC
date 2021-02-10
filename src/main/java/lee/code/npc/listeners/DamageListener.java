@@ -15,7 +15,7 @@ public class DamageListener implements Listener {
         if (e.getEntity() instanceof Villager) {
             String customName = e.getEntity().getCustomName();
             if (customName != null) {
-                String name = customName.replaceAll("§", "&");
+                String name = plugin.getPU().unFormat(customName);
                 if (plugin.getData().getActiveNPCs().contains(name)) {
                     e.setCancelled(true);
                 }

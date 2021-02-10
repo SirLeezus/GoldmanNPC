@@ -11,7 +11,7 @@ import java.util.*;
 
 public class TabCompletion implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("create", "select", "type", "profession", "name");
+    private final List<String> subCommands = Arrays.asList("create", "select", "type", "profession", "name", "command");
     private final List<String> blank = new ArrayList<>();
 
     @Override
@@ -28,6 +28,8 @@ public class TabCompletion implements TabCompleter {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getPU().getVillagerTypes(), new ArrayList<>());
             } else if (args[0].equals("profession")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getPU().getVillagerProfessions(), new ArrayList<>());
+            } else if (args[0].equals("command")) {
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("CONSOLE", "PLAYER"), new ArrayList<>());
             }
         }
         return blank;

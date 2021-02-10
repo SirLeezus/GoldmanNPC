@@ -4,6 +4,7 @@ import lee.code.npc.commands.CommandManager;
 import lee.code.npc.commands.TabCompletion;
 import lee.code.npc.database.SQLite;
 import lee.code.npc.listeners.DamageListener;
+import lee.code.npc.listeners.InteractListener;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,6 +40,7 @@ public class GoldmanNPC extends JavaPlugin {
 
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new DamageListener(), this);
+        getServer().getPluginManager().registerEvents(new InteractListener(), this);
     }
 
     private void registerCommands() {

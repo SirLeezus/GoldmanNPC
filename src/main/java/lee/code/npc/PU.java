@@ -8,10 +8,12 @@ import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.util.Vector;
 
 import java.util.EnumSet;
@@ -23,6 +25,10 @@ public class PU {
 
     public String format(String format) {
         return ChatColor.translateAlternateColorCodes('&', format);
+    }
+
+    public String unFormat(String format) {
+        return format.replaceAll("§", "&");
     }
 
     public String formatEntityLocation(Location location) {
@@ -43,6 +49,20 @@ public class PU {
         return w.toString();
     }
 
+    public void runCommand(Player player, String command, String type) {
+        switch (type) {
+
+            case "CONSOLE":
+                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                String run = command.replaceAll("%player%", player.getName());
+                Bukkit.dispatchCommand(console, run);
+                break;
+            case "PLAYER":
+                player.chat(command);
+                break;
+        }
+    }
+
     public void loadNPCList() {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
         SQLite SQL = plugin.getSqLite();
@@ -60,13 +80,15 @@ public class PU {
 
             for (Entity entity : location.getChunk().getEntities()) {
 
-                String customName = entity.getCustomName();
+                if (entity instanceof Villager) {
+                    String customName = entity.getCustomName();
 
-                if (customName != null) {
-                    String name = entity.getCustomName().replaceAll("§", "&");
-                    if (SQL.getNPCNames().contains(name)) {
-                        entity.remove();
-                        System.out.println(entity.getCustomName());
+                    if (customName != null) {
+                        String name = unFormat(entity.getCustomName());
+                        if (SQL.getNPCNames().contains(name)) {
+                            entity.remove();
+                            System.out.println(entity.getCustomName());
+                        }
                     }
                 }
             }
@@ -81,7 +103,7 @@ public class PU {
         for (Entity entity : SQL.getNPCLocation(npc).getChunk().getEntities()) {
             String customName = entity.getCustomName();
             if (customName != null) {
-                String name = entity.getCustomName().replaceAll("§", "&");
+                String name = unFormat(entity.getCustomName());
                 if (name.equals(npc)) {
                     entity.remove();
                     return;
@@ -110,7 +132,7 @@ public class PU {
                 if (getLookingAt(player, (LivingEntity) entity)) {
                     String customName = entity.getCustomName();
                     if (customName != null) {
-                        String name = customName.replaceAll("§", "&");
+                        String name = unFormat(customName);
                         if (SQL.getNPCNames().contains(name)) {
                             plugin.getData().setSelectedNPC(uuid, name);
                             return name;

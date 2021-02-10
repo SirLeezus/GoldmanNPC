@@ -78,12 +78,13 @@ public class SQLite {
                 "`location` varchar NOT NULL," +
                 "`profession` varchar NOT NULL," +
                 "`type` varchar NOT NULL," +
-                "`command` varchar NOT NULL" +
+                "`command` varchar NOT NULL," +
+                "`command_type` varchar NOT NULL" +
                 ");");
     }
 
-    public void createNPC(String name, String location, String profession, String type, String command) {
-        update("INSERT INTO npc (name, location, profession, type, command) VALUES( '" + name + "','" + location + "','" + profession + "','" + type + "','" + command + "');");
+    public void createNPC(String name, String location, String profession, String type, String command, String commandType) {
+        update("INSERT INTO npc (name, location, profession, type, command, command_type) VALUES( '" + name + "','" + location + "','" + profession + "','" + type + "','" + command + "','" + commandType + "');");
     }
 
     @SneakyThrows
@@ -106,6 +107,22 @@ public class SQLite {
 
     public void setCommand(String name, String command) {
         update("UPDATE npc SET command ='" + command + "' WHERE name ='" + name + "';");
+    }
+
+    public void setCommandType(String name, String commandType) {
+        update("UPDATE npc SET command_type ='" + commandType + "' WHERE name ='" + name + "';");
+    }
+
+    @SneakyThrows
+    public String getNPCCommandType(String name) {
+        ResultSet rs = getResult("SELECT * FROM npc WHERE name = '" + name + "';");
+        return rs.getString("command_type");
+    }
+
+    @SneakyThrows
+    public String getNPCCommand(String name) {
+        ResultSet rs = getResult("SELECT * FROM npc WHERE name = '" + name + "';");
+        return rs.getString("command");
     }
 
     @SneakyThrows

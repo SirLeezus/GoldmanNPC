@@ -8,26 +8,26 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class Create extends SubCommand {
+public class RunCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return "create";
+        return "command";
     }
 
     @Override
     public String getDescription() {
-        return "Create a new NPC.";
+        return "Set the selected NPC command.";
     }
 
     @Override
     public String getSyntax() {
-        return "/npc create <name>";
+        return "/npc command <type> <command>";
     }
 
     @Override
     public String getPermission() {
-        return "npc.command.create";
+        return "npc.command.command";
     }
 
     @Override
@@ -36,18 +36,18 @@ public class Create extends SubCommand {
         SQLite SQL = plugin.getSqLite();
         UUID uuid = player.getUniqueId();
 
-        if (args.length > 1) {
+        if (args.length > 2) {
 
-            String name = plugin.getPU().buildStringFromArgs(args, 1);
-            String location = plugin.getPU().formatEntityLocation(player.getLocation());
+            if (plugin.getData().hasSelectedNPC(uuid)) {
 
-            if (!SQL.isNameTaken(name)) {
-                SQL.createNPC(name, location, "NONE", "PLAINS", "n", "n");
-                SQL.loadNPC(name);
-                plugin.getData().setSelectedNPC(uuid, name);
-                plugin.getData().addActiveNPC(name);
-                player.sendMessage("NPC created!");
-            }
+                String commandType = args[1];
+                String command = args[2];
+                String npc = plugin.getData().getSelectedNPC(uuid);
+                SQL.setCommand(npc, command);
+                SQL.setCommandType(npc, commandType);
+                player.sendMessage("The command " + command + " was added to the this NPC.");
+
+            } else player.sendMessage("You need to select a NPC.");
         }
     }
 
