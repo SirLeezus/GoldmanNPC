@@ -112,16 +112,6 @@ public class PU {
         }
     }
 
-    public void spawnNPC(String name, Location location, String profession, String type) {
-        VillagerType villagerType = SupportedVillagerTypes.valueOf(type).getType();
-        VillagerProfession villagerProfession = SupportedVillagerProfessions.valueOf(profession).getProfession();
-        VillagerNPC villager = new VillagerNPC(location, villagerType, villagerProfession, name);
-
-        WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
-        world.addEntity(villager);
-        location.getChunk().setForceLoaded(true);
-    }
-
     public String selectNPC(Player player) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
         SQLite SQL = plugin.getSqLite();
