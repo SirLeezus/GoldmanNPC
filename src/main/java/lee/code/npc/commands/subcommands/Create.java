@@ -3,6 +3,7 @@ package lee.code.npc.commands.subcommands;
 import lee.code.npc.GoldmanNPC;
 import lee.code.npc.commands.SubCommand;
 import lee.code.npc.database.SQLite;
+import lee.code.npc.lists.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -46,9 +47,9 @@ public class Create extends SubCommand {
                 SQL.loadNPC(name);
                 plugin.getData().setSelectedNPC(uuid, name);
                 plugin.getData().addActiveNPC(name);
-                player.sendMessage("NPC created!");
-            }
-        }
+                player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CREATE_NPC_SUCCESSFUL.getString(new String[] { name }));
+            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NAME_TAKEN.getString(new String[] { name }));
+        } else  player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CREATE_ARG.getString(null));
     }
 
     @Override

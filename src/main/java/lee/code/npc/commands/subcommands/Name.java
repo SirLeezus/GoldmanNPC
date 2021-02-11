@@ -3,6 +3,7 @@ package lee.code.npc.commands.subcommands;
 import lee.code.npc.GoldmanNPC;
 import lee.code.npc.commands.SubCommand;
 import lee.code.npc.database.SQLite;
+import lee.code.npc.lists.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,19 +38,20 @@ public class Name extends SubCommand {
         UUID uuid = player.getUniqueId();
 
         if (args.length > 1) {
-
             if (plugin.getData().hasSelectedNPC(uuid)) {
                 String npc = plugin.getData().getSelectedNPC(uuid);
                 String name = plugin.getPU().buildStringFromArgs(args, 1);
-                plugin.getPU().removeNPC(npc);
 
-                SQL.setName(npc, name);
-                SQL.loadNPC(name);
-                plugin.getData().setSelectedNPC(uuid, name);
-                plugin.getData().removeActiveNPC(npc);
-                plugin.getData().addActiveNPC(name);
-            } else player.sendMessage("You need to select a NPC.");
-        }
+                if (!SQL.isNameTaken(name)) {
+                    plugin.getPU().removeNPC(npc);
+                    SQL.setName(npc, name);
+                    SQL.loadNPC(name);
+                    plugin.getData().setSelectedNPC(uuid, name);
+                    plugin.getData().removeActiveNPC(npc);
+                    plugin.getData().addActiveNPC(name);
+                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NAME_TAKEN.getString(new String[] { name }));
+            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NO_SELECTED_NPC.getString(null));
+        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_NAME_ARG.getString(null));
     }
 
     @Override
