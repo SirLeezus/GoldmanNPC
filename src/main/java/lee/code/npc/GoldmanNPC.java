@@ -34,7 +34,7 @@ public class GoldmanNPC extends JavaPlugin {
         sqLite.loadTables();
 
         pU.removeNPCs();
-        sqLite.loadNPCs();
+        data.cacheDatabase();
     }
 
     @Override

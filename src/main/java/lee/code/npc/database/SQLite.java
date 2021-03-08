@@ -4,7 +4,6 @@ import lee.code.npc.GoldmanNPC;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
 import lee.code.npc.nms.VillagerNPC;
-import lombok.SneakyThrows;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,8 +13,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SQLite {
 
@@ -72,7 +69,6 @@ public class SQLite {
     }
 
     public void loadTables() {
-        //chunk table
         update("CREATE TABLE IF NOT EXISTS npc (" +
                 "`name` varchar PRIMARY KEY," +
                 "`location` varchar NOT NULL," +
@@ -85,12 +81,6 @@ public class SQLite {
 
     public void createNPC(String name, String location, String profession, String type, String command, String commandType) {
         update("INSERT INTO npc (name, location, profession, type, command, command_type) VALUES( '" + name + "','" + location + "','" + profession + "','" + type + "','" + command + "','" + commandType + "');");
-    }
-
-    @SneakyThrows
-    public boolean isNameTaken(String name) {
-        ResultSet rs = getResult("SELECT name FROM npc WHERE name = '" + name + "';");
-        return rs.next();
     }
 
     public void setName(String oldName, String newName) {
@@ -113,90 +103,15 @@ public class SQLite {
         update("UPDATE npc SET command_type ='" + commandType + "' WHERE name ='" + name + "';");
     }
 
-    @SneakyThrows
-    public String getNPCCommandType(String name) {
-        ResultSet rs = getResult("SELECT * FROM npc WHERE name = '" + name + "';");
-        return rs.getString("command_type");
-    }
-
-    @SneakyThrows
-    public String getNPCCommand(String name) {
-        ResultSet rs = getResult("SELECT * FROM npc WHERE name = '" + name + "';");
-        return rs.getString("command");
-    }
-
-    @SneakyThrows
-    public List<Location> getNPCLocations() {
-        GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        ResultSet rs = getResult("SELECT * FROM npc;");
-
-        List<Location> locations = new ArrayList<>();
-
-        while (rs.next()) {
-            String locationString = rs.getString("location");
-            Location location = plugin.getPU().unFormatEntityLocation(locationString);
-            locations.add(location);
-        }
-        return locations;
-    }
-
-    @SneakyThrows
-    public Location getNPCLocation(String name) {
-        GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        ResultSet rs = getResult("SELECT * FROM npc WHERE name = '" + name + "';");
-        String locationString = rs.getString("location");
-        return plugin.getPU().unFormatEntityLocation(locationString);
-    }
-
-    @SneakyThrows
-    public List<String> getNPCNames() {
-        ResultSet rs = getResult("SELECT * FROM npc;");
-        List<String> names = new ArrayList<>();
-
-        while (rs.next()) {
-            String nameString = rs.getString("name");
-            names.add(nameString);
-        }
-        return names;
-    }
-
-    public void loadNPC(String npc) {
-        GoldmanNPC plugin = GoldmanNPC.getPlugin();
-
-        ResultSet rs = getResult("SELECT * FROM npc WHERE name = '" + npc + "';");
-        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-
-        try {
-            String nameString = rs.getString("name");
-            String locationString = rs.getString("location");
-            String professionString = rs.getString("profession");
-            String typeString = rs.getString("type");
-
-            String name = plugin.getPU().format(nameString);
-            Location location = plugin.getPU().unFormatEntityLocation(locationString);
-            WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
-
-            VillagerType type = SupportedVillagerTypes.valueOf(typeString).getType();
-            VillagerProfession profession = SupportedVillagerProfessions.valueOf(professionString).getProfession();
-            VillagerNPC villager = new VillagerNPC(location, type, profession, name);
-
-            scheduler.runTaskLater(plugin, () -> world.addEntity(villager), 10);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void loadNPCs() {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
         Cache cache = plugin.getCache();
 
-        ResultSet rs = getResult("SELECT * FROM npc;");
-        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-
         try {
+            ResultSet rs = getResult("SELECT * FROM npc;");
+            BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+            int count = 0;
             while (rs.next()) {
-
                 String nameString = rs.getString("name");
                 String locationString = rs.getString("location");
                 String professionString = rs.getString("profession");
@@ -215,7 +130,9 @@ public class SQLite {
                 VillagerNPC villager = new VillagerNPC(location, type, profession, name);
 
                 scheduler.runTaskLater(plugin, () -> world.addEntity(villager), 60);
+                count++;
             }
+            System.out.println(plugin.getPU().format("&3NPCs Loaded: &b" + count));
         }  catch (SQLException e) {
             e.printStackTrace();
         }

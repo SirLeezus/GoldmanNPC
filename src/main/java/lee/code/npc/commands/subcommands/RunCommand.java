@@ -44,8 +44,6 @@ public class RunCommand extends SubCommand {
                     String command = args[2];
                     String npcName = cache.getNPCSelected(uuid);
                     cache.setNPCCommand(npcName, command, commandType);
-                    //SQL.setCommand(npcName, command);
-                    //SQL.setCommandType(npcName, commandType);
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_COMMAND_ADDED_SUCCESSFUL.getString(new String[] { command, npcName }));
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NO_SELECTED_NPC.getString(null));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_COMMAND_ARG.getString(null));
@@ -54,6 +52,6 @@ public class RunCommand extends SubCommand {
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-
+        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
     }
 }

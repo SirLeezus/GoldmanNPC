@@ -43,9 +43,6 @@ public class Profession extends SubCommand {
                 if (plugin.getPU().getVillagerProfessions().contains(profession)) {
                     String npcName = cache.getNPCSelected(uuid);
                     cache.setNPCProfession(npcName, profession);
-                    //SQL.setProfession(npcName, profession);
-                    //plugin.getPU().removeNPC(npcName);
-                    //SQL.loadNPC(npcName);
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_PROFESSION_NOT_FOUND.getString(new String[] { profession }));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NO_SELECTED_NPC.getString(null));
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_PROFESSION_ARG.getString(null));
@@ -53,6 +50,6 @@ public class Profession extends SubCommand {
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-
+        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
     }
 }

@@ -16,6 +16,7 @@ public enum Lang {
     ERROR_COMMAND_NAME_ARG("&cYou need to input a name to rename your selected NPC."),
     ERROR_COMMAND_PROFESSION_ARG("&cYou need to input a supported profession to change your selected NPC's profession."),
     ERROR_COMMAND_TYPE_ARG("&cYou need to input a supported type to change your selected NPC's type."),
+    ERROR_NOT_A_CONSOLE_COMMAND("&cThis is not a console command."),
     ERROR_COMMAND_COMMAND_ARG("&cYou need to input the type of command and the command to change your selected NPC's command."),
     ERROR_COMMAND_PROFESSION_NOT_FOUND("&cYou input &6{0} &cis not a supported profession."),
     ERROR_COMMAND_TYPE_NOT_FOUND("&cYou input &6{0} &cis not a supported type."),

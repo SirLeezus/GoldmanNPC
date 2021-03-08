@@ -25,7 +25,7 @@ public class DamageListener implements Listener {
                     e.setCancelled(true);
                     if (e.getDamager() instanceof Player) {
                         Player player = (Player) e.getDamager();
-                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1, 1);
+                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_DEATH, 1, 1);
                     }
                 }
             }

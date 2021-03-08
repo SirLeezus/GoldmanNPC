@@ -43,13 +43,7 @@ public class Name extends SubCommand {
                 String newName = plugin.getPU().buildStringFromArgs(args, 1);
 
                 if (!cache.isNPC(newName)) {
-                    //plugin.getPU().removeNPC(oldName);
-                    //SQL.setName(oldName, newName);
                     cache.setNPCName(uuid, oldName, newName);
-                    //SQL.loadNPC(newName);
-                    //plugin.getData().setSelectedNPC(uuid, newName);
-                    //plugin.getData().removeActiveNPC(oldName);
-                    //plugin.getData().addActiveNPC(newName);
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NAME_TAKEN.getString(new String[] { newName }));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NO_SELECTED_NPC.getString(null));
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_NAME_ARG.getString(null));
@@ -57,6 +51,6 @@ public class Name extends SubCommand {
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-
+        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
     }
 }

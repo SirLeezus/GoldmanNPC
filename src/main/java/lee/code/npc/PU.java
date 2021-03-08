@@ -4,6 +4,7 @@ import lee.code.npc.database.Cache;
 import lee.code.npc.database.SQLite;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
+import lee.code.npc.lists.Values;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
 import java.util.EnumSet;
@@ -49,7 +51,6 @@ public class PU {
 
     public void runCommand(Player player, String command, String type) {
         switch (type) {
-
             case "CONSOLE":
                 ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                 String run = command.replaceAll("%player%", player.getName());
@@ -63,35 +64,22 @@ public class PU {
 
     public void removeNPCs() {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        SQLite SQL = plugin.getSqLite();
+        Cache cache = plugin.getCache();
 
-        for (Location location : SQL.getNPCLocations()) {
-            location.getChunk().load();
-            for (Entity entity : location.getChunk().getEntities()) {
-                if (entity instanceof Villager) {
-                    String customName = entity.getCustomName();
-                    if (customName != null) {
-                        String name = unFormat(entity.getCustomName());
-                        if (SQL.getNPCNames().contains(name)) {
-                            entity.remove();
+        List<Location> locations = cache.getNPCLocations();
+        if (!locations.isEmpty()) {
+            for (Location location : locations) {
+                location.getChunk().load();
+                for (Entity entity : location.getChunk().getEntities()) {
+                    if (entity instanceof Villager) {
+                        String customName = entity.getCustomName();
+                        if (customName != null) {
+                            String name = unFormat(entity.getCustomName());
+                            if (cache.isNPC(name)) {
+                                entity.remove();
+                            }
                         }
                     }
-                }
-            }
-        }
-    }
-
-    public void removeNPC(String npc) {
-        GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        SQLite SQL = plugin.getSqLite();
-
-        for (Entity entity : SQL.getNPCLocation(npc).getChunk().getEntities()) {
-            String customName = entity.getCustomName();
-            if (customName != null) {
-                String name = unFormat(entity.getCustomName());
-                if (name.equals(npc)) {
-                    entity.remove();
-                    return;
                 }
             }
         }
@@ -132,5 +120,12 @@ public class PU {
 
     public List<String> getVillagerProfessions() {
         return EnumSet.allOf(SupportedVillagerProfessions.class).stream().map(SupportedVillagerProfessions::name).collect(Collectors.toList());
+    }
+
+    public void addPlayerClickDelay(UUID uuid) {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        plugin.getData().addPlayerClickDelay(uuid);
+        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        scheduler.runTaskLater(plugin, () -> plugin.getData().removePlayerClickDelay(uuid), Values.CLICK_DELAY.getValue());
     }
 }

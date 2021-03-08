@@ -1,31 +1,28 @@
 package lee.code.npc;
 
+import lee.code.npc.database.SQLite;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 public class Data {
 
-    private final HashMap<UUID, String> selectedNPC = new HashMap<>();
-    private final List<String> savedNPCs = new ArrayList<>();
+    private final List<UUID> playerClickDelay = new ArrayList<>();
 
-    public void addActiveNPC(String name) {
-        savedNPCs.add(name);
+    public boolean hasPlayerClickDelay(UUID uuid) {
+        return playerClickDelay.contains(uuid);
     }
-    public void removeActiveNPC(String name) {
-        savedNPCs.remove(name);
+    public void addPlayerClickDelay(UUID uuid) {
+        playerClickDelay.add(uuid);
     }
-    public List<String> getActiveNPCs() {
-        return savedNPCs;
+    public void removePlayerClickDelay(UUID uuid) {
+        playerClickDelay.remove(uuid);
     }
-    public String getSelectedNPC(UUID player) {
-        return selectedNPC.get(player);
-    }
-    public void setSelectedNPC(UUID player, String name) {
-        selectedNPC.put(player, name);
-    }
-    public boolean hasSelectedNPC(UUID player) {
-        return selectedNPC.containsKey(player);
+
+    public void cacheDatabase() {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        SQLite SQL = plugin.getSqLite();
+        SQL.loadNPCs();
     }
 }

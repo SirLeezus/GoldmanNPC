@@ -3,7 +3,6 @@ package lee.code.npc.commands.subcommands;
 import lee.code.npc.GoldmanNPC;
 import lee.code.npc.commands.SubCommand;
 import lee.code.npc.database.Cache;
-import lee.code.npc.database.SQLite;
 import lee.code.npc.lists.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -44,9 +43,6 @@ public class Type extends SubCommand {
                 if (plugin.getPU().getVillagerTypes().contains(type)) {
                     String npcName = cache.getNPCSelected(uuid);
                     cache.setNPCType(npcName, type);
-                    //SQL.setType(npcName, type);
-                    //plugin.getPU().removeNPC(npcName);
-                    //SQL.loadNPC(npcName);
                 } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TYPE_NOT_FOUND.getString(new String[] { type }));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NO_SELECTED_NPC.getString(null));
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TYPE_ARG.getString(null));
@@ -54,6 +50,6 @@ public class Type extends SubCommand {
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-
+        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
     }
 }

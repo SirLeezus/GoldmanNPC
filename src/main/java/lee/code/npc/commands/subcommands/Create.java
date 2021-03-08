@@ -43,11 +43,7 @@ public class Create extends SubCommand {
             Location location = player.getLocation();
 
             if (!cache.isNPC(name)) {
-                //SQL.createNPC(name, location, "NONE", "PLAINS", "n", "n");
-                //SQL.loadNPC(name);
                 cache.createNPC(uuid, name, location, "NONE", "PLAINS", "n", "n");
-                //plugin.getData().setSelectedNPC(uuid, name);
-                //plugin.getData().addActiveNPC(name);
                 player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_CREATE_NPC_SUCCESSFUL.getString(new String[] { name }));
             } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NAME_TAKEN.getString(new String[] { name }));
         } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_CREATE_ARG.getString(null));
@@ -55,6 +51,6 @@ public class Create extends SubCommand {
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-
+        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
     }
 }

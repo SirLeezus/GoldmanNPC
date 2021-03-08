@@ -23,6 +23,8 @@ public class InteractListener implements Listener {
                 String name = plugin.getPU().unFormat(customName);
                 if (cache.isNPC(name)) {
                     e.setCancelled(true);
+                    if (plugin.getData().hasPlayerClickDelay(player.getUniqueId())) return;
+                    else plugin.getPU().addPlayerClickDelay(player.getUniqueId());
                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1, 1);
                     if (cache.hasNPCCommand(name)) {
                         String command = cache.getNPCCommand(name);

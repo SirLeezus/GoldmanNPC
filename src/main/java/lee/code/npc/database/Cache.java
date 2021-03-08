@@ -33,6 +33,7 @@ public class Cache {
             pipe.hset("npcCommandType", name, commandType);
             pipe.sync();
             addToNPCNameList(name);
+            addToNPCLocationList(location);
         }
     }
 
@@ -54,6 +55,7 @@ public class Cache {
             pipe.sync();
 
             addToNPCNameList(sName);
+            addToNPCLocationList(sLocation);
             setNPCSelected(uuid, sName);
 
             WorldServer npcWorld = ((CraftWorld) location.getWorld()).getHandle();
@@ -219,6 +221,45 @@ public class Cache {
                 String newNameList = jedis.get("npcNames") + "%" + name;
                 jedis.set("npcNames", newNameList);
             } else jedis.set("npcNames", name);
+        }
+    }
+
+    private void addToNPCLocationList(String location) {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getNPCPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            if (jedis.exists("npcLocations")) {
+                String newLocationList = jedis.get("npcLocations") + "%" + location;
+                jedis.set("npcLocations", newLocationList);
+            } else jedis.set("npcLocations", location);
+        }
+    }
+
+    private void removeFromNPCLocations(String location) {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getNPCPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            List<String> newList = new ArrayList<>();
+            String[] split = StringUtils.split(jedis.get("npcLocations"), '%');
+            for (String npcLocation : split) if (!npcLocation.equals(location)) newList.add(npcLocation);
+            String newLocationList = StringUtils.join(newList, "%");
+            jedis.set("npcLocations", newLocationList);
+        }
+    }
+
+    public List<Location> getNPCLocations() {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getNPCPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            List<Location> locations = new ArrayList<>();
+            if (jedis.exists("npcLocations")) {
+                String[] split = StringUtils.split(jedis.get("npcLocations"), '%');
+                for (String location : split) locations.add(plugin.getPU().unFormatEntityLocation(location));
+            }
+            return locations;
         }
     }
 
