@@ -1,5 +1,6 @@
 package lee.code.npc;
 
+import lee.code.npc.database.Cache;
 import lee.code.npc.database.SQLite;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
@@ -60,31 +61,19 @@ public class PU {
         }
     }
 
-    public void loadNPCList() {
-        GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        SQLite SQL = plugin.getSqLite();
-        for (String name : SQL.getNPCNames()) plugin.getData().addActiveNPC(name);
-    }
-
     public void removeNPCs() {
-
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
         SQLite SQL = plugin.getSqLite();
 
         for (Location location : SQL.getNPCLocations()) {
             location.getChunk().load();
-            location.getChunk().setForceLoaded(true);
-
             for (Entity entity : location.getChunk().getEntities()) {
-
                 if (entity instanceof Villager) {
                     String customName = entity.getCustomName();
-
                     if (customName != null) {
                         String name = unFormat(entity.getCustomName());
                         if (SQL.getNPCNames().contains(name)) {
                             entity.remove();
-                            System.out.println(entity.getCustomName());
                         }
                     }
                 }
@@ -93,7 +82,6 @@ public class PU {
     }
 
     public void removeNPC(String npc) {
-
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
         SQLite SQL = plugin.getSqLite();
 
@@ -111,7 +99,7 @@ public class PU {
 
     public String selectNPC(Player player) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        SQLite SQL = plugin.getSqLite();
+        Cache cache = plugin.getCache();
         UUID uuid = player.getUniqueId();
 
         for (Entity entity : player.getNearbyEntities(10, 10, 10)) {
@@ -120,8 +108,8 @@ public class PU {
                     String customName = entity.getCustomName();
                     if (customName != null) {
                         String name = unFormat(customName);
-                        if (SQL.getNPCNames().contains(name)) {
-                            plugin.getData().setSelectedNPC(uuid, name);
+                        if (cache.isNPC(name)) {
+                            cache.setNPCSelected(uuid, name);
                             return name;
                         }
                     }

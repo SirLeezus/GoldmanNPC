@@ -1,7 +1,9 @@
 package lee.code.npc;
 
+import lee.code.cache.CacheAPI;
 import lee.code.npc.commands.CommandManager;
 import lee.code.npc.commands.TabCompletion;
+import lee.code.npc.database.Cache;
 import lee.code.npc.database.SQLite;
 import lee.code.npc.listeners.DamageListener;
 import lee.code.npc.listeners.InteractListener;
@@ -13,6 +15,8 @@ public class GoldmanNPC extends JavaPlugin {
     @Getter private PU pU;
     @Getter private SQLite sqLite;
     @Getter private Data data;
+    @Getter private CacheAPI cacheAPI;
+    @Getter private Cache cache;
 
     @Override
     public void onEnable() {
@@ -20,6 +24,8 @@ public class GoldmanNPC extends JavaPlugin {
         this.pU = new PU();
         this.sqLite = new SQLite();
         this.data = new Data();
+        this.cacheAPI = new CacheAPI();
+        this.cache = new Cache();
 
         registerCommands();
         registerListeners();
@@ -29,7 +35,6 @@ public class GoldmanNPC extends JavaPlugin {
 
         pU.removeNPCs();
         sqLite.loadNPCs();
-        pU.loadNPCList();
     }
 
     @Override

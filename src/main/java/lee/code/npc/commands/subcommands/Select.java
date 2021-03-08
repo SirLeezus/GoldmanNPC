@@ -31,9 +31,7 @@ public class Select extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-
         String name = plugin.getPU().selectNPC(player);
-
         if (!name.equals("n")) player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_SELECT_NPC_SUCCESSFUL.getString(new String[] { name }) );
         else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_TARGET_NPC.getString(null));
     }

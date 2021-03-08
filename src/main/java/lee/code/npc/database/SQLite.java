@@ -56,7 +56,7 @@ public class SQLite {
 
     public void update(String sql) {
         try {
-            statement.execute(sql);
+            statement.executeUpdate(sql);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -160,38 +160,13 @@ public class SQLite {
         return names;
     }
 
-    @SneakyThrows
     public void loadNPC(String npc) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
 
         ResultSet rs = getResult("SELECT * FROM npc WHERE name = '" + npc + "';");
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 
-        String nameString = rs.getString("name");
-        String locationString = rs.getString("location");
-        String professionString = rs.getString("profession");
-        String typeString = rs.getString("type");
-
-        String name = plugin.getPU().format(nameString);
-        Location location = plugin.getPU().unFormatEntityLocation(locationString);
-        WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
-
-        VillagerType type = SupportedVillagerTypes.valueOf(typeString).getType();
-        VillagerProfession profession = SupportedVillagerProfessions.valueOf(professionString).getProfession();
-        VillagerNPC villager = new VillagerNPC(location, type, profession, name);
-
-        scheduler.runTaskLater(plugin, () -> world.addEntity(villager), 10);
-    }
-
-    @SneakyThrows
-    public void loadNPCs() {
-        GoldmanNPC plugin = GoldmanNPC.getPlugin();
-
-        ResultSet rs = getResult("SELECT * FROM npc;");
-        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-
-        while (rs.next()) {
-
+        try {
             String nameString = rs.getString("name");
             String locationString = rs.getString("location");
             String professionString = rs.getString("profession");
@@ -205,7 +180,44 @@ public class SQLite {
             VillagerProfession profession = SupportedVillagerProfessions.valueOf(professionString).getProfession();
             VillagerNPC villager = new VillagerNPC(location, type, profession, name);
 
-            scheduler.runTaskLater(plugin, () -> world.addEntity(villager), 60);
+            scheduler.runTaskLater(plugin, () -> world.addEntity(villager), 10);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadNPCs() {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        Cache cache = plugin.getCache();
+
+        ResultSet rs = getResult("SELECT * FROM npc;");
+        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+
+        try {
+            while (rs.next()) {
+
+                String nameString = rs.getString("name");
+                String locationString = rs.getString("location");
+                String professionString = rs.getString("profession");
+                String typeString = rs.getString("type");
+                String commandString = rs.getString("command");
+                String commandTypeString = rs.getString("command_type");
+
+                cache.setNPC(nameString, locationString, professionString, typeString, commandString, commandTypeString);
+
+                String name = plugin.getPU().format(nameString);
+                Location location = plugin.getPU().unFormatEntityLocation(locationString);
+                WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
+
+                VillagerType type = SupportedVillagerTypes.valueOf(typeString).getType();
+                VillagerProfession profession = SupportedVillagerProfessions.valueOf(professionString).getProfession();
+                VillagerNPC villager = new VillagerNPC(location, type, profession, name);
+
+                scheduler.runTaskLater(plugin, () -> world.addEntity(villager), 60);
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

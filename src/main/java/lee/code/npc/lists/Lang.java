@@ -23,7 +23,7 @@ public enum Lang {
     ERROR_TARGET_NPC("&cSadly no NPC was detected."),
     COMMAND_SELECT_NPC_SUCCESSFUL("&aYou successfully selected the NPC &e(&f{0}&e)&a!"),
     COMMAND_CREATE_NPC_SUCCESSFUL("&aYou successfully created the NPC &e(&f{0}&e)&a!"),
-    COMMAND_COMMAND_ADDED_SUCCESSFUL("&aYou successfully added the command &6{0} &ato the NPC &e(&f{0}&e)&a!"),
+    COMMAND_COMMAND_ADDED_SUCCESSFUL("&aYou successfully set the command &6{0} &ato the NPC &e(&f{1}&e)&a!"),
     ;
 
     @Getter private final String string;

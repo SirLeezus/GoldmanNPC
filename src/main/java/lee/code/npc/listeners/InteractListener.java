@@ -1,7 +1,7 @@
 package lee.code.npc.listeners;
 
 import lee.code.npc.GoldmanNPC;
-import lee.code.npc.database.SQLite;
+import lee.code.npc.database.Cache;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -14,19 +14,21 @@ public class InteractListener implements Listener {
     @EventHandler
     public void onInteractEvent(PlayerInteractEntityEvent e) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        SQLite SQL = plugin.getSqLite();
-        Player player = e.getPlayer();
+        Cache cache = plugin.getCache();
 
         if (e.getRightClicked() instanceof Villager) {
+            Player player = e.getPlayer();
             String customName = e.getRightClicked().getCustomName();
             if (customName != null) {
                 String name = plugin.getPU().unFormat(customName);
-                if (plugin.getData().getActiveNPCs().contains(name)) {
+                if (cache.isNPC(name)) {
                     e.setCancelled(true);
-                    String command = SQL.getNPCCommand(name);
-                    String commandType = SQL.getNPCCommandType(name);
-                    plugin.getPU().runCommand(player, command, commandType);
                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1, 1);
+                    if (cache.hasNPCCommand(name)) {
+                        String command = cache.getNPCCommand(name);
+                        String commandType = cache.getNPCCommandType(name);
+                        plugin.getPU().runCommand(player, command, commandType);
+                    }
                 }
             }
         }
