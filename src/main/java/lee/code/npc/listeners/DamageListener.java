@@ -1,5 +1,6 @@
 package lee.code.npc.listeners;
 
+import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import lee.code.npc.GoldmanNPC;
 import lee.code.npc.database.Cache;
 import org.bukkit.Sound;
@@ -34,6 +35,22 @@ public class DamageListener implements Listener {
 
     @EventHandler
     public void onNPCDamage(EntityDamageEvent e) {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        Cache cache = plugin.getCache();
+
+        if (e.getEntity() instanceof Villager) {
+            String customName = e.getEntity().getCustomName();
+            if (customName != null) {
+                String name = plugin.getPU().unFormat(customName);
+                if (cache.isNPC(name)) {
+                    e.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onNPCZap(EntityZapEvent e) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
         Cache cache = plugin.getCache();
 

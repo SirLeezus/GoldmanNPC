@@ -9,26 +9,26 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class Type extends SubCommand {
+public class LocationNPC extends SubCommand {
 
     @Override
     public String getName() {
-        return "type";
+        return "location";
     }
 
     @Override
     public String getDescription() {
-        return "Set the selected NPC type.";
+        return "Set the location of the NPC you have selected.";
     }
 
     @Override
     public String getSyntax() {
-        return "/npc type &f<type>";
+        return "/npc location";
     }
 
     @Override
     public String getPermission() {
-        return "npc.command.type";
+        return "npc.command.location";
     }
 
     @Override
@@ -37,15 +37,11 @@ public class Type extends SubCommand {
         Cache cache = plugin.getCache();
         UUID uuid = player.getUniqueId();
 
-        if (args.length > 1) {
-            if (cache.hasNPCSelected(uuid)) {
-                String type = args[1];
-                if (plugin.getPU().getVillagerTypes().contains(type)) {
-                    String npcName = cache.getNPCSelected(uuid);
-                    cache.setNPCType(npcName, type);
-                } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TYPE_NOT_FOUND.getString(new String[] { type }));
-            } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NO_SELECTED_NPC.getString(null));
-        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_COMMAND_TYPE_ARG.getString(null));
+        if (cache.hasNPCSelected(uuid)) {
+            String npcName = cache.getNPCSelected(uuid);
+            String sLocation = plugin.getPU().formatEntityLocation(player.getLocation());
+            cache.setNPCLocation(npcName, sLocation);
+        } else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NO_SELECTED_NPC.getString(null));
     }
 
     @Override

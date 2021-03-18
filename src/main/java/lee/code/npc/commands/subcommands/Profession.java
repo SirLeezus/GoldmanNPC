@@ -23,7 +23,7 @@ public class Profession extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/npc profession <profession>";
+        return "/npc profession &f<profession>";
     }
 
     @Override

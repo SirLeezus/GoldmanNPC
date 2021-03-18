@@ -45,6 +45,9 @@ public class Cache {
         String sName = name.replaceAll("%", "");
         String sLocation = plugin.getPU().formatEntityLocation(location);
 
+        location.getChunk().load();
+        location.getChunk().setForceLoaded(true);
+
         try (Jedis jedis = pool.getResource()) {
             Pipeline pipe = jedis.pipelined();
             pipe.hset("npcLocation", sName, sLocation);
@@ -68,12 +71,20 @@ public class Cache {
         }
     }
 
-    private void reloadNPC(String name, String oldName) {
+    private void reloadNPC(String name, String oldName, String oldLocation) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getNPCPool();
 
         try (Jedis jedis = pool.getResource()) {
-            Location location = plugin.getPU().unFormatEntityLocation(jedis.hget("npcLocation", name));
+
+            Location location; String npcName;
+
+            if (oldLocation != null) location = plugin.getPU().unFormatEntityLocation(oldLocation);
+            else location = plugin.getPU().unFormatEntityLocation(jedis.hget("npcLocation", name));
+
+            if (oldName != null) npcName = oldName;
+            else npcName = name;
+
             String sProfession = jedis.hget("npcProfession", name);
             String sType = jedis.hget("npcType", name);
 
@@ -81,9 +92,10 @@ public class Cache {
                 String customName = entity.getCustomName();
                 if (customName != null) {
                     String entityName = plugin.getPU().unFormat(entity.getCustomName());
-                    if (entityName.equals(name) || entityName.equals(oldName)) {
+                    if (entityName.equals(npcName)) {
                         entity.remove();
 
+                        if (oldLocation != null) location = plugin.getPU().unFormatEntityLocation(jedis.hget("npcLocation", name));
                         WorldServer npcWorld = ((CraftWorld) location.getWorld()).getHandle();
                         VillagerProfession npcProfession = SupportedVillagerProfessions.valueOf(sProfession).getProfession();
                         VillagerType npcType = SupportedVillagerTypes.valueOf(sType).getType();
@@ -117,6 +129,7 @@ public class Cache {
             pipe.hset("npcType", sName, sType);
             pipe.hset("npcCommand", sName, sCommand);
             pipe.hset("npcCommandType", sName, sCommandType);
+
             pipe.hdel("npcLocation", oldName);
             pipe.hdel("npcProfession", oldName);
             pipe.hdel("npcType", oldName);
@@ -126,10 +139,10 @@ public class Cache {
 
             removeFromNPCNames(oldName);
             addToNPCNameList(sName);
-            reloadNPC(sName, oldName);
+            reloadNPC(sName, oldName, null);
             setNPCSelected(uuid, sName);
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setName(oldName, sName));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setName(oldName, sName, sLocation, sProfession, sType, sCommand, sCommandType));
         }
     }
 
@@ -140,8 +153,23 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("npcProfession", name, profession);
-            reloadNPC(name, "null");
+            reloadNPC(name, null, null);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setProfession(name, profession));
+        }
+    }
+
+    public void setNPCLocation(String name, String location) {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getNPCPool();
+        SQLite SQL = plugin.getSqLite();
+
+        try (Jedis jedis = pool.getResource()) {
+            String oldLocation = jedis.hget("npcLocation", name);
+            jedis.hset("npcLocation", name, location);
+            reloadNPC(name, null, oldLocation);
+            removeFromNPCLocations(oldLocation);
+            addToNPCLocationList(location);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setLocation(name, location));
         }
     }
 
@@ -152,7 +180,7 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("npcType", name, type);
-            reloadNPC(name, "null");
+            reloadNPC(name, null, null);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.setType(name, type));
         }
     }
@@ -178,6 +206,17 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             jedis.hset("npcSelected", sUUID, name);
+        }
+    }
+
+    public void removeNPCSelected(UUID uuid) {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getNPCPool();
+
+        String sUUID = String.valueOf(uuid);
+
+        try (Jedis jedis = pool.getResource()) {
+            jedis.hdel("npcSelected", sUUID);
         }
     }
 
@@ -314,6 +353,33 @@ public class Cache {
 
         try (Jedis jedis = pool.getResource()) {
             return jedis.hget("npcCommandType", name);
+        }
+    }
+
+    public void removeNPC(String name) {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getNPCPool();
+        SQLite SQL = plugin.getSqLite();
+
+        try (Jedis jedis = pool.getResource()) {
+
+            String sLocation = jedis.hget("npcLocation", name);
+
+            Pipeline pipe = jedis.pipelined();
+            pipe.hdel("npcLocation", name);
+            pipe.hdel("npcProfession", name);
+            pipe.hdel("npcType", name);
+            pipe.hdel("npcCommand", name);
+            pipe.hdel("npcCommandType", name);
+            pipe.sync();
+
+            Location location = plugin.getPU().unFormatEntityLocation(sLocation);
+
+            removeFromNPCNames(name);
+            removeFromNPCLocations(sLocation);
+            plugin.getPU().removeNPC(location, name);
+
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.removeNPC(name));
         }
     }
 }

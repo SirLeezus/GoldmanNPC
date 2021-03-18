@@ -85,6 +85,21 @@ public class PU {
         }
     }
 
+    public void removeNPC(Location location, String name) {
+        for (Entity entity : location.getChunk().getEntities()) {
+            if (entity instanceof Villager) {
+                String customName = entity.getCustomName();
+                if (customName != null) {
+                    String npcName = unFormat(entity.getCustomName());
+                    if (npcName.equals(name)) {
+                        entity.remove();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     public String selectNPC(Player player) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
         Cache cache = plugin.getCache();

@@ -24,7 +24,7 @@ public class RunCommand extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/npc command <type> <command>";
+        return "/npc command &f<type> <command>";
     }
 
     @Override

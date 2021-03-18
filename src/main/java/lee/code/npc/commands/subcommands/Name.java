@@ -23,7 +23,7 @@ public class Name extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/npc name <name>";
+        return "/npc name &f<name>";
     }
 
     @Override

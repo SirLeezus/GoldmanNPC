@@ -83,8 +83,17 @@ public class SQLite {
         update("INSERT INTO npc (name, location, profession, type, command, command_type) VALUES( '" + name + "','" + location + "','" + profession + "','" + type + "','" + command + "','" + commandType + "');");
     }
 
-    public void setName(String oldName, String newName) {
-        update("UPDATE npc SET name ='" + newName + "' WHERE name ='" + oldName + "';");
+    public void removeNPC(String name) {
+        update("DELETE FROM npc WHERE name = '" + name + "';");
+    }
+
+    public void setName(String oldName, String newName, String location, String profession, String type, String command, String commandType) {
+        update("DELETE FROM npc WHERE name = '" + oldName + "';");
+        update("INSERT INTO npc (name, location, profession, type, command, command_type) VALUES( '" + newName + "','" + location + "','" + profession + "','" + type + "','" + command + "','" + commandType + "');");
+    }
+
+    public void setLocation(String name, String location) {
+        update("UPDATE npc SET location ='" + location + "' WHERE name ='" + name + "';");
     }
 
     public void setType(String name, String type) {
@@ -124,6 +133,9 @@ public class SQLite {
                 String name = plugin.getPU().format(nameString);
                 Location location = plugin.getPU().unFormatEntityLocation(locationString);
                 WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
+
+                location.getChunk().load();
+                location.getChunk().setForceLoaded(true);
 
                 VillagerType type = SupportedVillagerTypes.valueOf(typeString).getType();
                 VillagerProfession profession = SupportedVillagerProfessions.valueOf(professionString).getProfession();

@@ -24,7 +24,7 @@ public class Create extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/npc create <name>";
+        return "/npc create &f<name>";
     }
 
     @Override
