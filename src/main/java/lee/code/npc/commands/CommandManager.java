@@ -20,6 +20,7 @@ public class CommandManager implements CommandExecutor {
         subCommands.add(new Remove());
         subCommands.add(new ListNPCs());
         subCommands.add(new LocationNPC());
+        subCommands.add(new TeleportNPC());
         subCommands.add(new Select());
         subCommands.add(new Type());
         subCommands.add(new Profession());

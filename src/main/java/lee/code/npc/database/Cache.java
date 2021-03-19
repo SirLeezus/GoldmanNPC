@@ -302,6 +302,15 @@ public class Cache {
         }
     }
 
+    public Location getNPCLocation(String name) {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        JedisPool pool = plugin.getCacheAPI().getNPCPool();
+
+        try (Jedis jedis = pool.getResource()) {
+            return plugin.getPU().unFormatEntityLocation(jedis.hget("npcLocation", name));
+        }
+    }
+
     public List<String> getNPCNames() {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
         JedisPool pool = plugin.getCacheAPI().getNPCPool();

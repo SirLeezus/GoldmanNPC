@@ -1,6 +1,7 @@
 package lee.code.npc.commands;
 
 import lee.code.npc.GoldmanNPC;
+import lee.code.npc.database.Cache;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -11,12 +12,13 @@ import java.util.*;
 
 public class TabCompletion implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("create", "remove", "list", "select", "location", "type", "profession", "name", "command");
+    private final List<String> subCommands = Arrays.asList("create", "remove", "list", "select", "tp", "location", "type", "profession", "name", "command");
     private final List<String> blank = new ArrayList<>();
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        Cache cache = plugin.getCache();
 
         if (sender instanceof Player) {
             if (args.length == 1) {
@@ -30,6 +32,8 @@ public class TabCompletion implements TabCompleter {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getPU().getVillagerProfessions(), new ArrayList<>());
             } else if (args[0].equals("command")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("CONSOLE", "PLAYER"), new ArrayList<>());
+            } else if (args[0].equals("tp")) {
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cache.getNPCNames(), new ArrayList<>());
             }
         }
         return blank;
