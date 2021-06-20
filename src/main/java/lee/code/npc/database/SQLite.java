@@ -4,10 +4,12 @@ import lee.code.npc.GoldmanNPC;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
 import lee.code.npc.nms.VillagerNPC;
-import net.minecraft.server.v1_16_R3.*;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;

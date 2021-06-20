@@ -2,25 +2,26 @@ package lee.code.npc.lists;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.server.v1_16_R3.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerProfession;
 
 @AllArgsConstructor
 public enum SupportedVillagerProfessions {
 
-    ARMORER(VillagerProfession.ARMORER),
-    BUTCHER(VillagerProfession.BUTCHER),
-    CARTOGRAPHER(VillagerProfession.CARTOGRAPHER),
-    CLERIC(VillagerProfession.CLERIC),
-    FARMER(VillagerProfession.FARMER),
-    FISHERMAN(VillagerProfession.FISHERMAN),
-    FLETCHER(VillagerProfession.FLETCHER),
-    LEATHERWORKER(VillagerProfession.LEATHERWORKER),
-    LIBRARIAN(VillagerProfession.LIBRARIAN),
-    MASON(VillagerProfession.MASON),
-    SHEPHERD(VillagerProfession.SHEPHERD),
-    TOOLSMITH(VillagerProfession.TOOLSMITH),
-    WEAPONSMITH(VillagerProfession.WEAPONSMITH),
-    NONE(VillagerProfession.NONE),
+    NONE(VillagerProfession.a),
+    ARMORER(VillagerProfession.b),
+    BUTCHER(VillagerProfession.c),
+    CARTOGRAPHER(VillagerProfession.d),
+    CLERIC(VillagerProfession.e),
+    FARMER(VillagerProfession.f),
+    FISHERMAN(VillagerProfession.g),
+    FLETCHER(VillagerProfession.h),
+    LEATHERWORKER(VillagerProfession.i),
+    LIBRARIAN(VillagerProfession.j),
+    MASON(VillagerProfession.k),
+    NITWIT(VillagerProfession.l),
+    SHEPHERD(VillagerProfession.m),
+    TOOLSMITH(VillagerProfession.n),
+    WEAPONSMITH(VillagerProfession.o),
     ;
 
     @Getter private final VillagerProfession profession;

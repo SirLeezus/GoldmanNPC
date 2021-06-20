@@ -46,18 +46,26 @@
     <dependencies>
         <!-- Paper API -->
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
+            <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <version>1.17-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <artifactId>spigot-17-api</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>C:\Users\Lee\Documents\APIs\spigot-1.16.5.jar</systemPath>
+            <systemPath>C:\Users\Lee\Documents\APIs\spigot-1.17.jar</systemPath>
+        </dependency>
+        <!-- Redis Cache API -->
+        <dependency>
+            <groupId>lee.code.cache</groupId>
+            <artifactId>redis-17-api</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>C:\Users\Lee\Documents\APIs\RedisCache.jar</systemPath>
         </dependency>
         <!-- Mojang API -->
         <dependency>
@@ -70,7 +78,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>1.18.20</version>
         </dependency>
     </dependencies>
 </project>

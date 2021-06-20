@@ -1,7 +1,7 @@
 name: GoldmanNPC
 main: lee.code.npc.GoldmanNPC
 version: 1.0
-api-version: 1.16
+api-version: 1.17
 author: Lee
 depend: [RedisCache]
 commands:

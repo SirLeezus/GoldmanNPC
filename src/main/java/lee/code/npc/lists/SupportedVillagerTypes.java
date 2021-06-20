@@ -2,18 +2,18 @@ package lee.code.npc.lists;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.server.v1_16_R3.VillagerType;
+import net.minecraft.world.entity.npc.VillagerType;
 
 @AllArgsConstructor
 public enum SupportedVillagerTypes {
 
-    JUNGLE(VillagerType.JUNGLE),
-    DESERT(VillagerType.DESERT),
-    PLAINS(VillagerType.PLAINS),
-    SAVANNA(VillagerType.SAVANNA),
-    SNOW(VillagerType.SNOW),
-    SWAMP(VillagerType.SWAMP),
-    TAIGA(VillagerType.TAIGA),
+    JUNGLE(VillagerType.b),
+    DESERT(VillagerType.a),
+    PLAINS(VillagerType.c),
+    SAVANNA(VillagerType.d),
+    SNOW(VillagerType.e),
+    SWAMP(VillagerType.f),
+    TAIGA(VillagerType.g),
     ;
 
     @Getter private final VillagerType type;

@@ -1,19 +1,19 @@
 package lee.code.npc.database;
 
-import lee.code.cache.jedis.Jedis;
-import lee.code.cache.jedis.JedisPool;
-import lee.code.cache.jedis.Pipeline;
+import jedis.Jedis;
+import jedis.JedisPool;
+import jedis.Pipeline;
 import lee.code.npc.GoldmanNPC;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
 import lee.code.npc.nms.VillagerNPC;
-import net.minecraft.server.v1_16_R3.VillagerProfession;
-import net.minecraft.server.v1_16_R3.VillagerType;
-import net.minecraft.server.v1_16_R3.WorldServer;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 
 import java.util.*;
