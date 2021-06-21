@@ -41,7 +41,7 @@ public class RunCommand extends SubCommand {
                 UUID uuid = player.getUniqueId();
                 if (cache.hasNPCSelected(uuid)) {
                     String commandType = args[1];
-                    String command = args[2];
+                    String command = plugin.getPU().buildStringFromArgs(args, 2);
                     String npcName = cache.getNPCSelected(uuid);
                     cache.setNPCCommand(npcName, command, commandType);
                     player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_COMMAND_ADDED_SUCCESSFUL.getString(new String[] { command, npcName }));
