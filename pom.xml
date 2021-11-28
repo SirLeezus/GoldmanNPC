@@ -48,7 +48,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.17-R0.1-SNAPSHOT</version>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- Spigot API -->
@@ -57,7 +57,7 @@
             <artifactId>spigot-17-api</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>C:\Users\Lee\Documents\APIs\spigot-1.17.jar</systemPath>
+            <systemPath>C:\Users\Lee\Documents\APIs\spigot-1.17.1.jar</systemPath>
         </dependency>
         <!-- Redis Cache API -->
         <dependency>

@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.util.logging.Level;
 
 public class SQLite {
 
@@ -146,7 +147,7 @@ public class SQLite {
                 scheduler.runTaskLater(plugin, () -> world.addEntity(villager), 60);
                 count++;
             }
-            System.out.println(plugin.getPU().format("&3NPCs Loaded: &b" + count));
+            Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&3NPCs Loaded: &b" + count));
         }  catch (SQLException e) {
             e.printStackTrace();
         }

@@ -33,8 +33,8 @@ public class VillagerNPC extends EntityVillager {
         this.setAge(1);
         this.setSilent(true);
         this.collides = false;
-        this.bO.a(0, new PathfinderGoalLookAtPlayer(this, EntityPlayer.class, 5, 100));
-        this.bO.a(1, new PathfinderGoalRandomLookaround(this));
+        this.bP.a(0, new PathfinderGoalLookAtPlayer(this, EntityPlayer.class, 5, 100));
+        this.bP.a(1, new PathfinderGoalRandomLookaround(this));
     }
 
     @Override
@@ -53,8 +53,8 @@ public class VillagerNPC extends EntityVillager {
             priorityBehaviorsField.setAccessible(true);
             coreActivityField.setAccessible(true);
 
-            availableGoalsField.set(this.bO, Sets.newLinkedHashSet());
             availableGoalsField.set(this.bP, Sets.newLinkedHashSet());
+            availableGoalsField.set(this.bQ, Sets.newLinkedHashSet());
             priorityBehaviorsField.set(this.getBehaviorController(), Collections.emptyMap());
             coreActivityField.set(this.getBehaviorController(), Sets.newHashSet());
 

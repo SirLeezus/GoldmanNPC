@@ -1,7 +1,6 @@
 package lee.code.npc;
 
 import lee.code.npc.database.Cache;
-import lee.code.npc.database.SQLite;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
 import lee.code.npc.lists.Values;
