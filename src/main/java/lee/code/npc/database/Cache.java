@@ -7,13 +7,13 @@ import lee.code.npc.GoldmanNPC;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
 import lee.code.npc.nms.VillagerNPC;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 
 import java.util.*;
@@ -61,12 +61,12 @@ public class Cache {
             addToNPCLocationList(sLocation);
             setNPCSelected(uuid, sName);
 
-            WorldServer npcWorld = ((CraftWorld) location.getWorld()).getHandle();
+            ServerLevel npcWorld = ((CraftWorld) location.getWorld()).getHandle();
             VillagerProfession npcProfession = SupportedVillagerProfessions.valueOf(profession).getProfession();
             VillagerType npcType = SupportedVillagerTypes.valueOf(type).getType();
             VillagerNPC villager = new VillagerNPC(location, npcType, npcProfession, sName);
 
-            Bukkit.getScheduler().runTaskLater(plugin, () -> npcWorld.addEntity(villager), 10);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> npcWorld.addFreshEntity(villager), 10);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.createNPC(sName, sLocation, profession, type, command, commandType));
         }
     }
@@ -96,11 +96,11 @@ public class Cache {
                         entity.remove();
 
                         if (oldLocation != null) location = plugin.getPU().unFormatEntityLocation(jedis.hget("npcLocation", name));
-                        WorldServer npcWorld = ((CraftWorld) location.getWorld()).getHandle();
+                        ServerLevel npcWorld = ((CraftWorld) location.getWorld()).getHandle();
                         VillagerProfession npcProfession = SupportedVillagerProfessions.valueOf(sProfession).getProfession();
                         VillagerType npcType = SupportedVillagerTypes.valueOf(sType).getType();
                         VillagerNPC villager = new VillagerNPC(location, npcType, npcProfession, name);
-                        Bukkit.getScheduler().runTaskLater(plugin, () -> npcWorld.addEntity(villager), 10);
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> npcWorld.addFreshEntity(villager), 10);
                         return;
                     }
                 }

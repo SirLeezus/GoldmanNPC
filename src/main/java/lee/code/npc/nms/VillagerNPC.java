@@ -1,62 +1,66 @@
 package lee.code.npc.nms;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.ai.BehaviorController;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomLookaround;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
-import net.minecraft.world.entity.npc.EntityVillager;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 
-public class VillagerNPC extends EntityVillager {
+public class VillagerNPC extends Villager {
 
     public VillagerNPC(Location loc, VillagerType villagertype, VillagerProfession villagerProfession, String name) {
-        super(EntityTypes.aV, ((CraftWorld)loc.getWorld()).getHandle(), villagertype);
-        this.setPosition(loc.getX(), loc.getY(), loc.getZ());
+        super(EntityType.VILLAGER, ((CraftWorld)loc.getWorld()).getHandle(), villagertype);
+        this.setPos(loc.getX(), loc.getY(), loc.getZ());
         this.removeAI();
         this.setInvulnerable(true);
-        this.setCustomName(new ChatComponentText(ChatColor.translateAlternateColorCodes('&', name)));
+        this.setCustomName(new TextComponent(ChatColor.translateAlternateColorCodes('&', name)));
         this.setCustomNameVisible(true);
-        this.setVillagerData(this.getVillagerData().withProfession(villagerProfession));
-        this.setVillagerData(this.getVillagerData().withType(villagertype));
+        this.setVillagerData(this.getVillagerData().setProfession(villagerProfession));
+        this.setVillagerData(this.getVillagerData().setType(villagertype));
         this.setAge(1);
         this.setSilent(true);
         this.collides = false;
-        this.bP.a(0, new PathfinderGoalLookAtPlayer(this, EntityPlayer.class, 5, 100));
-        this.bP.a(1, new PathfinderGoalRandomLookaround(this));
+        this.goalSelector.addGoal(0, new LookAtPlayerGoal(this, net.minecraft.world.entity.player.Player.class, 5, 100));
+        this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
     }
 
+    //stops the server from saving entity to chunk
     @Override
-    public NBTTagCompound save(NBTTagCompound nbttagcompound){
-        return nbttagcompound;
+    public boolean save(CompoundTag nbttagcompound){
+        return false;
     }
+
+    //stops the server from saving entity to chunk
+    @Override
+    public void load(CompoundTag nbttagcompound) { }
 
     private void removeAI() {
 
         try {
-            Field availableGoalsField = PathfinderGoalSelector.class.getDeclaredField("d");
-            Field priorityBehaviorsField = BehaviorController.class.getDeclaredField("f");
-            Field coreActivityField = BehaviorController.class.getDeclaredField("j");
+            Field availableGoalsField = GoalSelector.class.getDeclaredField("d");
+            Field priorityBehaviorsField = Brain.class.getDeclaredField("f");
+            Field coreActivityField = Brain.class.getDeclaredField("j");
 
             availableGoalsField.setAccessible(true);
             priorityBehaviorsField.setAccessible(true);
             coreActivityField.setAccessible(true);
 
-            availableGoalsField.set(this.bP, Sets.newLinkedHashSet());
-            availableGoalsField.set(this.bQ, Sets.newLinkedHashSet());
-            priorityBehaviorsField.set(this.getBehaviorController(), Collections.emptyMap());
-            coreActivityField.set(this.getBehaviorController(), Sets.newHashSet());
+            availableGoalsField.set(this.goalSelector, Sets.newLinkedHashSet());
+            availableGoalsField.set(this.targetSelector, Sets.newLinkedHashSet());
+            priorityBehaviorsField.set(this.getBrain(), Maps.newTreeMap());
+            coreActivityField.set(this.getBrain(), Sets.newHashSet());
 
         } catch (IllegalAccessException | NoSuchFieldException | IllegalArgumentException exception) {
             exception.printStackTrace();

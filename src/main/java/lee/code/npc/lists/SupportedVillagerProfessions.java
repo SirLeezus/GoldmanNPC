@@ -7,21 +7,21 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 @AllArgsConstructor
 public enum SupportedVillagerProfessions {
 
-    NONE(VillagerProfession.a),
-    ARMORER(VillagerProfession.b),
-    BUTCHER(VillagerProfession.c),
-    CARTOGRAPHER(VillagerProfession.d),
-    CLERIC(VillagerProfession.e),
-    FARMER(VillagerProfession.f),
-    FISHERMAN(VillagerProfession.g),
-    FLETCHER(VillagerProfession.h),
-    LEATHERWORKER(VillagerProfession.i),
-    LIBRARIAN(VillagerProfession.j),
-    MASON(VillagerProfession.k),
-    NITWIT(VillagerProfession.l),
-    SHEPHERD(VillagerProfession.m),
-    TOOLSMITH(VillagerProfession.n),
-    WEAPONSMITH(VillagerProfession.o),
+    NONE(VillagerProfession.NONE),
+    ARMORER(VillagerProfession.ARMORER),
+    BUTCHER(VillagerProfession.BUTCHER),
+    CARTOGRAPHER(VillagerProfession.CARTOGRAPHER),
+    CLERIC(VillagerProfession.CLERIC),
+    FARMER(VillagerProfession.FARMER),
+    FISHERMAN(VillagerProfession.FISHERMAN),
+    FLETCHER(VillagerProfession.FLETCHER),
+    LEATHERWORKER(VillagerProfession.LEATHERWORKER),
+    LIBRARIAN(VillagerProfession.LIBRARIAN),
+    MASON(VillagerProfession.MASON),
+    NITWIT(VillagerProfession.NITWIT),
+    SHEPHERD(VillagerProfession.SHEPHERD),
+    TOOLSMITH(VillagerProfession.TOOLSMITH),
+    WEAPONSMITH(VillagerProfession.WEAPONSMITH),
     ;
 
     @Getter private final VillagerProfession profession;

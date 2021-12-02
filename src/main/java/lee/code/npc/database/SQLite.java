@@ -4,12 +4,12 @@ import lee.code.npc.GoldmanNPC;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
 import lee.code.npc.nms.VillagerNPC;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
@@ -135,7 +135,7 @@ public class SQLite {
 
                 String name = plugin.getPU().format(nameString);
                 Location location = plugin.getPU().unFormatEntityLocation(locationString);
-                WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
+                ServerLevel world = ((CraftWorld) location.getWorld()).getHandle();
 
                 location.getChunk().load();
                 location.getChunk().setForceLoaded(true);
@@ -144,7 +144,7 @@ public class SQLite {
                 VillagerProfession profession = SupportedVillagerProfessions.valueOf(professionString).getProfession();
                 VillagerNPC villager = new VillagerNPC(location, type, profession, name);
 
-                scheduler.runTaskLater(plugin, () -> world.addEntity(villager), 60);
+                scheduler.runTaskLater(plugin, () -> world.addFreshEntity(villager), 60);
                 count++;
             }
             Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&3NPCs Loaded: &b" + count));
