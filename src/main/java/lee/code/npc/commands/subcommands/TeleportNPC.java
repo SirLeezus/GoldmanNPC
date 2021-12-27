@@ -1,6 +1,7 @@
 package lee.code.npc.commands.subcommands;
 
 import lee.code.npc.GoldmanNPC;
+import lee.code.npc.PU;
 import lee.code.npc.commands.SubCommand;
 import lee.code.npc.database.Cache;
 import lee.code.npc.lists.Lang;
@@ -33,10 +34,11 @@ public class TeleportNPC extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        PU pu = plugin.getPU();
         Cache cache = plugin.getCache();
 
         if (args.length > 1) {
-            String targetName = plugin.getPU().buildStringFromArgs(args, 1);
+            String targetName = pu.buildStringFromArgs(args, 1);
             if (cache.isNPC(targetName)) {
                 Location location = cache.getNPCLocation(targetName);
                 player.teleportAsync(location);
@@ -46,6 +48,6 @@ public class TeleportNPC extends SubCommand {
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

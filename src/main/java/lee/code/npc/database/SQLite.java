@@ -1,6 +1,7 @@
 package lee.code.npc.database;
 
 import lee.code.npc.GoldmanNPC;
+import lee.code.npc.PU;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
 import lee.code.npc.nms.VillagerNPC;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -28,11 +30,11 @@ public class SQLite {
 
         try {
             if (!plugin.getDataFolder().exists()) {
-                plugin.getDataFolder().mkdir();
+                boolean created = plugin.getDataFolder().mkdir();
             }
             File dbFile = new File(plugin.getDataFolder(), "database.db");
             if (!dbFile.exists()) {
-                dbFile.createNewFile();
+                boolean created = dbFile.createNewFile();
             }
             String url = "jdbc:sqlite:" + dbFile.getPath();
 
@@ -117,6 +119,7 @@ public class SQLite {
 
     public void loadNPCs() {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        PU pu = plugin.getPU();
         Cache cache = plugin.getCache();
 
         try {
@@ -133,21 +136,21 @@ public class SQLite {
 
                 cache.setNPC(nameString, locationString, professionString, typeString, commandString, commandTypeString);
 
-                String name = plugin.getPU().format(nameString);
-                Location location = plugin.getPU().unFormatEntityLocation(locationString);
+                String name = pu.format(nameString);
+                Location location = pu.unFormatEntityLocation(locationString);
                 ServerLevel world = ((CraftWorld) location.getWorld()).getHandle();
 
-                location.getChunk().load();
+                location.getWorld().getChunkAtAsync(location, false);
                 location.getChunk().setForceLoaded(true);
 
                 VillagerType type = SupportedVillagerTypes.valueOf(typeString).getType();
                 VillagerProfession profession = SupportedVillagerProfessions.valueOf(professionString).getProfession();
-                VillagerNPC villager = new VillagerNPC(location, type, profession, name);
 
+                VillagerNPC villager = new VillagerNPC(location, type, profession, name);
                 scheduler.runTaskLater(plugin, () -> world.addFreshEntity(villager), 60);
                 count++;
             }
-            Bukkit.getLogger().log(Level.INFO, plugin.getPU().format("&3NPCs Loaded: &b" + count));
+            Bukkit.getLogger().log(Level.INFO, pu.format("&3NPCs Loaded: &b" + count));
         }  catch (SQLException e) {
             e.printStackTrace();
         }

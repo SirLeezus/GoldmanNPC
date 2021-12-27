@@ -24,8 +24,7 @@ public class DamageListener implements Listener {
                 String name = plugin.getPU().unFormat(customName);
                 if (cache.isNPC(name)) {
                     e.setCancelled(true);
-                    if (e.getDamager() instanceof Player) {
-                        Player player = (Player) e.getDamager();
+                    if (e.getDamager() instanceof Player player) {
                         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_DEATH, 1, 1);
                     }
                 }

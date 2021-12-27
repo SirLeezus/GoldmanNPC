@@ -12,7 +12,6 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 
@@ -24,8 +23,9 @@ public class VillagerNPC extends Villager {
         super(EntityType.VILLAGER, ((CraftWorld)loc.getWorld()).getHandle(), villagertype);
         this.setPos(loc.getX(), loc.getY(), loc.getZ());
         this.removeAI();
+        this.setNoGravity(true);
         this.setInvulnerable(true);
-        this.setCustomName(new TextComponent(ChatColor.translateAlternateColorCodes('&', name)));
+        this.setCustomName(new TextComponent(name));
         this.setCustomNameVisible(true);
         this.setVillagerData(this.getVillagerData().setProfession(villagerProfession));
         this.setVillagerData(this.getVillagerData().setType(villagertype));

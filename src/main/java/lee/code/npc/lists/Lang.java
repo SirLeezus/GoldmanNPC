@@ -1,8 +1,10 @@
 package lee.code.npc.lists;
 
+import lee.code.npc.GoldmanNPC;
+import lee.code.npc.PU;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
 
 @AllArgsConstructor
 public enum Lang {
@@ -27,15 +29,30 @@ public enum Lang {
     COMMAND_SELECT_NPC_SUCCESSFUL("&aYou successfully selected the NPC &e(&f{0}&e)&a!"),
     COMMAND_CREATE_NPC_SUCCESSFUL("&aYou successfully created the NPC &e(&f{0}&e)&a!"),
     COMMAND_COMMAND_ADDED_SUCCESSFUL("&aYou successfully set the command &6{0} &ato the NPC &e(&f{1}&e)&a!"),
+    PAGE_SPACER(" &e| "),
+    NEXT_PAGE_HOVER("&6&lNext Page"),
+    PREVIOUS_PAGE_HOVER("&6&lPrevious Page"),
+    NEXT_PAGE_TEXT("&2&lNext &a&l>>--------"),
+    PREVIOUS_PAGE_TEXT("&a&l--------<< &2&lPrev"),
     ;
 
     @Getter private final String string;
 
     public String getString(String[] variables) {
-        String value = ChatColor.translateAlternateColorCodes('&', string);
-        if (variables == null) return value;
-        else if (variables.length == 0) return value;
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        PU pu = plugin.getPU();
+        String value = string;
+        if (variables == null || variables.length == 0) return pu.format(value);
         for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
-        return ChatColor.translateAlternateColorCodes('&', value);
+        return pu.format(value);
+    }
+
+    public Component getComponent(String[] variables) {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        PU pu = plugin.getPU();
+        String value = string;
+        if (variables == null || variables.length == 0) return pu.formatC(value);
+        for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
+        return pu.formatC(value);
     }
 }

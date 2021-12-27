@@ -4,8 +4,10 @@ import lee.code.npc.database.Cache;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
 import lee.code.npc.lists.Values;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
@@ -18,12 +20,29 @@ import org.bukkit.util.Vector;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class PU {
 
-    public String format(String format) {
-        return ChatColor.translateAlternateColorCodes('&', format);
+    private final Pattern hexRegex = Pattern.compile("\\&#[a-fA-F0-9]{6}");
+
+    public String format(String message) {
+        if (message == null) return "";
+        Matcher matcher = hexRegex.matcher(message);
+
+        while (matcher.find()) {
+            String color = message.substring(matcher.start(), matcher.end()).replaceAll("&", "");
+            message = message.replace("&" + color, net.md_5.bungee.api.ChatColor.of(color) + "");
+            matcher = hexRegex.matcher(message);
+        }
+        return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public Component formatC(String message) {
+        LegacyComponentSerializer serializer = LegacyComponentSerializer.legacyAmpersand();
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(serializer.deserialize(message));
     }
 
     public String unFormat(String format) {
@@ -50,14 +69,12 @@ public class PU {
 
     public void runCommand(Player player, String command, String type) {
         switch (type) {
-            case "CONSOLE":
+            case "CONSOLE" -> {
                 ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                 String run = command.replaceAll("%player%", player.getName());
                 Bukkit.dispatchCommand(console, run);
-                break;
-            case "PLAYER":
-                player.chat(command);
-                break;
+            }
+            case "PLAYER" -> player.chat(command);
         }
     }
 
@@ -141,5 +158,9 @@ public class PU {
         plugin.getData().addPlayerClickDelay(uuid);
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         scheduler.runTaskLater(plugin, () -> plugin.getData().removePlayerClickDelay(uuid), Values.CLICK_DELAY.getValue());
+    }
+
+    public boolean containOnlyNumbers(String string) {
+        return string.matches("[0-9]+");
     }
 }

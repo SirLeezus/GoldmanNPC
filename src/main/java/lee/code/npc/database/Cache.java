@@ -4,6 +4,7 @@ import jedis.Jedis;
 import jedis.JedisPool;
 import jedis.Pipeline;
 import lee.code.npc.GoldmanNPC;
+import lee.code.npc.PU;
 import lee.code.npc.lists.SupportedVillagerProfessions;
 import lee.code.npc.lists.SupportedVillagerTypes;
 import lee.code.npc.nms.VillagerNPC;
@@ -39,13 +40,14 @@ public class Cache {
 
     public void createNPC(UUID uuid, String name, Location location, String profession, String type, String command, String commandType) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        PU pu = plugin.getPU();
         SQLite SQL = plugin.getSqLite();
         JedisPool pool = plugin.getCacheAPI().getNPCPool();
 
         String sName = name.replaceAll("%", "");
-        String sLocation = plugin.getPU().formatEntityLocation(location);
+        String sLocation = pu.formatEntityLocation(location);
 
-        location.getChunk().load();
+        location.getWorld().getChunkAtAsync(location, false);
         location.getChunk().setForceLoaded(true);
 
         try (Jedis jedis = pool.getResource()) {
@@ -64,8 +66,8 @@ public class Cache {
             ServerLevel npcWorld = ((CraftWorld) location.getWorld()).getHandle();
             VillagerProfession npcProfession = SupportedVillagerProfessions.valueOf(profession).getProfession();
             VillagerType npcType = SupportedVillagerTypes.valueOf(type).getType();
-            VillagerNPC villager = new VillagerNPC(location, npcType, npcProfession, sName);
 
+            VillagerNPC villager = new VillagerNPC(location, npcType, npcProfession, pu.format(sName));
             Bukkit.getScheduler().runTaskLater(plugin, () -> npcWorld.addFreshEntity(villager), 10);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.createNPC(sName, sLocation, profession, type, command, commandType));
         }
@@ -73,14 +75,14 @@ public class Cache {
 
     private void reloadNPC(String name, String oldName, String oldLocation) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        PU pu = plugin.getPU();
         JedisPool pool = plugin.getCacheAPI().getNPCPool();
 
         try (Jedis jedis = pool.getResource()) {
-
             Location location; String npcName;
 
-            if (oldLocation != null) location = plugin.getPU().unFormatEntityLocation(oldLocation);
-            else location = plugin.getPU().unFormatEntityLocation(jedis.hget("npcLocation", name));
+            if (oldLocation != null) location = pu.unFormatEntityLocation(oldLocation);
+            else location = pu.unFormatEntityLocation(jedis.hget("npcLocation", name));
 
             if (oldName != null) npcName = oldName;
             else npcName = name;
@@ -88,18 +90,21 @@ public class Cache {
             String sProfession = jedis.hget("npcProfession", name);
             String sType = jedis.hget("npcType", name);
 
+            location.getWorld().getChunkAtAsync(location, false);
+            location.getChunk().setForceLoaded(true);
+
             for (Entity entity : location.getChunk().getEntities()) {
                 String customName = entity.getCustomName();
                 if (customName != null) {
-                    String entityName = plugin.getPU().unFormat(entity.getCustomName());
+                    String entityName = pu.unFormat(entity.getCustomName());
                     if (entityName.equals(npcName)) {
                         entity.remove();
-
-                        if (oldLocation != null) location = plugin.getPU().unFormatEntityLocation(jedis.hget("npcLocation", name));
+                        location = pu.unFormatEntityLocation(jedis.hget("npcLocation", name));
                         ServerLevel npcWorld = ((CraftWorld) location.getWorld()).getHandle();
                         VillagerProfession npcProfession = SupportedVillagerProfessions.valueOf(sProfession).getProfession();
                         VillagerType npcType = SupportedVillagerTypes.valueOf(sType).getType();
-                        VillagerNPC villager = new VillagerNPC(location, npcType, npcProfession, name);
+
+                        VillagerNPC villager = new VillagerNPC(location, npcType, npcProfession, pu.format(name));
                         Bukkit.getScheduler().runTaskLater(plugin, () -> npcWorld.addFreshEntity(villager), 10);
                         return;
                     }
@@ -367,6 +372,7 @@ public class Cache {
 
     public void removeNPC(String name) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        PU pu = plugin.getPU();
         JedisPool pool = plugin.getCacheAPI().getNPCPool();
         SQLite SQL = plugin.getSqLite();
 
@@ -382,11 +388,11 @@ public class Cache {
             pipe.hdel("npcCommandType", name);
             pipe.sync();
 
-            Location location = plugin.getPU().unFormatEntityLocation(sLocation);
+            Location location = pu.unFormatEntityLocation(sLocation);
 
             removeFromNPCNames(name);
             removeFromNPCLocations(sLocation);
-            plugin.getPU().removeNPC(location, name);
+            pu.removeNPC(location, name);
 
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> SQL.removeNPC(name));
         }

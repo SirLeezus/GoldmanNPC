@@ -1,19 +1,16 @@
 package lee.code.npc.commands.subcommands;
 
 import lee.code.npc.GoldmanNPC;
+import lee.code.npc.PU;
 import lee.code.npc.commands.SubCommand;
 import lee.code.npc.database.Cache;
 import lee.code.npc.lists.Lang;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ListNPCs extends SubCommand {
 
@@ -40,6 +37,7 @@ public class ListNPCs extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        PU pu = plugin.getPU();
         Cache cache = plugin.getCache();
 
         int index;
@@ -47,15 +45,17 @@ public class ListNPCs extends SubCommand {
         int page = 0;
 
         if (args.length > 1) {
-            Scanner numberScanner = new Scanner(args[1]);
-            if (numberScanner.hasNextInt()) {
+            if (pu.containOnlyNumbers(args[1])) {
                 page = Integer.parseInt(args[1]);
                 if (page < 0) return;
             }
         }
 
         List<String> npcNames = cache.getNPCNames();
-        List<String> formattedList = new ArrayList<>();
+        List<Component> lines = new ArrayList<>();
+
+        lines.add(Lang.MESSAGE_COMMAND_LIST_TITLE.getComponent(null));
+        lines.add(Component.text(""));
 
         if (npcNames != null && !npcNames.isEmpty()) {
             for (int i = 0; i < maxDisplayed; i++) {
@@ -64,32 +64,23 @@ public class ListNPCs extends SubCommand {
                 if (npcNames.get(index) != null) {
                     int npcNumber = index + 1;
                     String npcName = npcNames.get(index);
-                    formattedList.add(Lang.MESSAGE_COMMAND_LIST_NPC.getString(new String[]{ String.valueOf(npcNumber), npcName }));
+                    lines.add(Lang.MESSAGE_COMMAND_LIST_NPC.getComponent(new String[]{ String.valueOf(npcNumber), npcName }));
                 }
             }
         }
 
-        if (formattedList.size() != 0) {
-            player.sendMessage(Lang.MESSAGE_COMMAND_LIST_TITLE.getString(null));
+        if (lines.size() <= 2) return;
 
-            for (String line : formattedList) player.sendMessage(line);
+        Component next = Lang.NEXT_PAGE_TEXT.getComponent(null).hoverEvent(Lang.NEXT_PAGE_HOVER.getComponent(null)).clickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(net.kyori.adventure.text.event.ClickEvent.Action.RUN_COMMAND, "/npc list " + (page + 1)));
+        Component split = Lang.PAGE_SPACER.getComponent(null);
+        Component prev = Lang.PREVIOUS_PAGE_TEXT.getComponent(null).hoverEvent(Lang.PREVIOUS_PAGE_HOVER.getComponent(null)).clickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(net.kyori.adventure.text.event.ClickEvent.Action.RUN_COMMAND, "/npc list " + (page - 1)));
 
-            TextComponent nextPage= new TextComponent(plugin.getPU().format("&e&lNext >>---"));
-            nextPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/npc list " + (page + 1)));
-            nextPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(plugin.getPU().format("&6&lNext Page >"))));
-
-            TextComponent previousPage= new TextComponent(plugin.getPU().format("&e&l---<< Prev"));
-            previousPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/npc list " + (page - 1)));
-            previousPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(plugin.getPU().format("&6&l< Previous Page"))));
-
-            TextComponent spacer = new TextComponent(plugin.getPU().format(" &7| "));
-
-            player.spigot().sendMessage(previousPage, spacer, nextPage);
-        }
+        lines.add(prev.append(split).append(next));
+        for (Component line : lines) player.sendMessage(line);
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

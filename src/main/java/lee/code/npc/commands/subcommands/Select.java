@@ -1,6 +1,7 @@
 package lee.code.npc.commands.subcommands;
 
 import lee.code.npc.GoldmanNPC;
+import lee.code.npc.PU;
 import lee.code.npc.commands.SubCommand;
 import lee.code.npc.lists.Lang;
 import org.bukkit.command.CommandSender;
@@ -31,13 +32,14 @@ public class Select extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        String name = plugin.getPU().selectNPC(player);
-        if (!name.equals("n")) player.sendMessage(Lang.PREFIX.getString(null) + Lang.COMMAND_SELECT_NPC_SUCCESSFUL.getString(new String[] { name }) );
-        else player.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_TARGET_NPC.getString(null));
+        PU pu = plugin.getPU();
+        String name = pu.selectNPC(player);
+        if (!name.equals("n")) player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_SELECT_NPC_SUCCESSFUL.getComponent(new String[] { name })));
+        else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_TARGET_NPC.getComponent(null)));
     }
 
     @Override
     public void performConsole(CommandSender console, String[] args) {
-        console.sendMessage(Lang.PREFIX.getString(null) + Lang.ERROR_NOT_A_CONSOLE_COMMAND.getString(null));
+        console.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NOT_A_CONSOLE_COMMAND.getComponent(null)));
     }
 }

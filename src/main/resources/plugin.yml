@@ -1,6 +1,6 @@
 name: GoldmanNPC
 main: lee.code.npc.GoldmanNPC
-version: 1.0
+version: ${project.version}
 api-version: 1.18
 author: Lee
 depend: [RedisCache]
