@@ -10,8 +10,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;

@@ -14,7 +14,7 @@ import net.minecraft.world.entity.npc.VillagerType;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 
 import java.util.*;

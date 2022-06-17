@@ -3,7 +3,7 @@ package lee.code.npc.nms;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
@@ -13,7 +13,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 
 import java.lang.reflect.Field;
 
@@ -25,7 +25,7 @@ public class VillagerNPC extends Villager {
         this.removeAI();
         this.setNoGravity(true);
         this.setInvulnerable(true);
-        this.setCustomName(new TextComponent(name));
+        this.setCustomName(Component.literal(name));
         this.setCustomNameVisible(true);
         this.setVillagerData(this.getVillagerData().setProfession(villagerProfession));
         this.setVillagerData(this.getVillagerData().setType(villagertype));
