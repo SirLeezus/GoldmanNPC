@@ -3,6 +3,7 @@ package lee.code.npc.commands;
 import lee.code.npc.commands.subcommands.*;
 import lee.code.npc.lists.Lang;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -51,14 +52,13 @@ public class CommandManager implements CommandExecutor {
 
             for (SubCommand subCommand : subCommands) {
                 if (player.hasPermission(subCommand.getPermission())) {
-                    lines.add(Lang.MESSAGE_HELP_SUB_COMMAND.getComponent(new String[]{String.valueOf(number), subCommand.getSyntax(), subCommand.getDescription()}));
+                    String suggestCommand = subCommand.getSyntax().contains(" ") ? subCommand.getSyntax().split(" ")[0] : subCommand.getSyntax();
+                    lines.add(Lang.MESSAGE_HELP_SUB_COMMAND.getComponent(new String[] { String.valueOf(number), subCommand.getSyntax() }).hoverEvent(Lang.MESSAGE_HELP_SUB_COMMAND_HOVER.getComponent(new String[] {  subCommand.getDescription() })).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND, suggestCommand)));
                     number++;
                 }
             }
-
             lines.add(Component.text(""));
             lines.add(Lang.MESSAGE_HELP_DIVIDER.getComponent(null));
-
             for (Component line : lines) player.sendMessage(line);
             return true;
 

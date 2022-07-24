@@ -1,9 +1,9 @@
 package lee.code.npc.commands.subcommands;
 
+import lee.code.core.util.bukkit.BukkitUtils;
 import lee.code.npc.GoldmanNPC;
-import lee.code.npc.PU;
 import lee.code.npc.commands.SubCommand;
-import lee.code.npc.database.Cache;
+import lee.code.npc.database.CacheManager;
 import lee.code.npc.lists.Lang;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -23,7 +23,7 @@ public class TeleportNPC extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/npc tp &f<name>";
+        return "/npc tp &f<id>";
     }
 
     @Override
@@ -34,14 +34,15 @@ public class TeleportNPC extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        PU pu = plugin.getPU();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         if (args.length > 1) {
-            String targetName = pu.buildStringFromArgs(args, 1);
-            if (cache.isNPC(targetName)) {
-                Location location = cache.getNPCLocation(targetName);
-                player.teleportAsync(location);
+            if (BukkitUtils.containOnlyNumbers(args[1])) {
+                int id = Integer.parseInt(args[1]);
+                if (cacheManager.isNPC(id)) {
+                    Location location = cacheManager.getNPCLocation(id);
+                    player.teleportAsync(location);
+                }
             }
         }
     }

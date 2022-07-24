@@ -2,7 +2,7 @@ package lee.code.npc.commands.subcommands;
 
 import lee.code.npc.GoldmanNPC;
 import lee.code.npc.commands.SubCommand;
-import lee.code.npc.database.Cache;
+import lee.code.npc.database.CacheManager;
 import lee.code.npc.lists.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,13 +34,12 @@ public class LocationNPC extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
         UUID uuid = player.getUniqueId();
 
-        if (cache.hasNPCSelected(uuid)) {
-            String npcName = cache.getNPCSelected(uuid);
-            String sLocation = plugin.getPU().formatEntityLocation(player.getLocation());
-            cache.setNPCLocation(npcName, sLocation);
+        if (plugin.getData().hasSelectedNPC(uuid)) {
+            int id = plugin.getData().getSelectedNPC(uuid);
+            cacheManager.setNPCLocation(id, player.getLocation());
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NO_SELECTED_NPC.getComponent(null)));
     }
 

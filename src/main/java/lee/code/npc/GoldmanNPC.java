@@ -1,10 +1,9 @@
 package lee.code.npc;
 
-import lee.code.cache.CacheAPI;
 import lee.code.npc.commands.CommandManager;
 import lee.code.npc.commands.TabCompletion;
-import lee.code.npc.database.Cache;
-import lee.code.npc.database.SQLite;
+import lee.code.npc.database.CacheManager;
+import lee.code.npc.database.DatabaseManager;
 import lee.code.npc.listeners.DamageListener;
 import lee.code.npc.listeners.InteractListener;
 import lombok.Getter;
@@ -12,35 +11,30 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class GoldmanNPC extends JavaPlugin {
 
-    @Getter private PU pU;
-    @Getter private SQLite sqLite;
+    @Getter private DatabaseManager databaseManager;
+    @Getter private CacheManager cacheManager;
     @Getter private Data data;
-    @Getter private CacheAPI cacheAPI;
-    @Getter private Cache cache;
+    @Getter private PU pU;
 
     @Override
     public void onEnable() {
-
         this.pU = new PU();
-        this.sqLite = new SQLite();
+        this.databaseManager = new DatabaseManager();
         this.data = new Data();
-        this.cacheAPI = new CacheAPI();
-        this.cache = new Cache();
+        this.cacheManager = new CacheManager();
 
         registerCommands();
         registerListeners();
 
-        sqLite.connect();
-        sqLite.loadTables();
-
+        databaseManager.initialize();
+        data.loadData();
         pU.removeNPCs();
-        data.cacheDatabase();
     }
 
     @Override
     public void onDisable() {
         pU.removeNPCs();
-        sqLite.disconnect();
+        databaseManager.closeConnection();
     }
 
     private void registerListeners() {

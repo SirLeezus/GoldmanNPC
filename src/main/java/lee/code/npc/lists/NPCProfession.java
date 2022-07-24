@@ -5,7 +5,7 @@ import lombok.Getter;
 import net.minecraft.world.entity.npc.VillagerProfession;
 
 @AllArgsConstructor
-public enum SupportedVillagerProfessions {
+public enum NPCProfession {
 
     NONE(VillagerProfession.NONE),
     ARMORER(VillagerProfession.ARMORER),
@@ -22,6 +22,7 @@ public enum SupportedVillagerProfessions {
     SHEPHERD(VillagerProfession.SHEPHERD),
     TOOLSMITH(VillagerProfession.TOOLSMITH),
     WEAPONSMITH(VillagerProfession.WEAPONSMITH),
+
     ;
 
     @Getter private final VillagerProfession profession;

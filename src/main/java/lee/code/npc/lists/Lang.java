@@ -1,7 +1,6 @@
 package lee.code.npc.lists;
 
-import lee.code.npc.GoldmanNPC;
-import lee.code.npc.PU;
+import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -11,7 +10,8 @@ public enum Lang {
     PREFIX("&b&lNPC &3➔ &r"),
     MESSAGE_HELP_DIVIDER("&b▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
     MESSAGE_HELP_TITLE("                      &6-== &3&l&nNPC Help&r &6==-"),
-    MESSAGE_HELP_SUB_COMMAND("&3{0}&b. &e{1} &c| &7{2}"),
+    MESSAGE_HELP_SUB_COMMAND_HOVER("&6{0}"),
+    MESSAGE_HELP_SUB_COMMAND("&3{0}&b. &e{1}"),
     ERROR_NO_PERMISSION("&cYou sadly do not have permission for this."),
     ERROR_NAME_TAKEN("&cThere is already a NPC called &e(&f{0}&e)&c."),
     ERROR_COMMAND_CREATE_ARG("&cYou need to input a name for the new NPC to run this command."),
@@ -19,8 +19,9 @@ public enum Lang {
     ERROR_COMMAND_PROFESSION_ARG("&cYou need to input a supported profession to change your selected NPC's profession."),
     ERROR_COMMAND_TYPE_ARG("&cYou need to input a supported type to change your selected NPC's type."),
     ERROR_NOT_A_CONSOLE_COMMAND("&cThis is not a console command."),
-    MESSAGE_COMMAND_LIST_NPC("&b{0}&7. &6{1}"),
-    MESSAGE_COMMAND_LIST_TITLE("&e&l----<< &9&lNPC List &e&l>>----"),
+    MESSAGE_COMMAND_LIST_NPC("&9ID&7: &b{0} &e| &9Name&7: {1}"),
+    MESSAGE_COMMAND_LIST_NPC_HOVER("&9ID&7: &b{0}"),
+    MESSAGE_COMMAND_LIST_TITLE("&a------------&e[ &6&lNPC List &e]&a------------"),
     ERROR_COMMAND_COMMAND_ARG("&cYou need to input the type of command and the command to change your selected NPC's command."),
     ERROR_COMMAND_PROFESSION_NOT_FOUND("&cYou input &6{0} &cis not a supported profession."),
     ERROR_COMMAND_TYPE_NOT_FOUND("&cYou input &6{0} &cis not a supported type."),
@@ -39,20 +40,16 @@ public enum Lang {
     @Getter private final String string;
 
     public String getString(String[] variables) {
-        GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        PU pu = plugin.getPU();
         String value = string;
-        if (variables == null || variables.length == 0) return pu.format(value);
+        if (variables == null || variables.length == 0) return BukkitUtils.parseColorString(value);
         for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
-        return pu.format(value);
+        return BukkitUtils.parseColorString(value);
     }
 
     public Component getComponent(String[] variables) {
-        GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        PU pu = plugin.getPU();
         String value = string;
-        if (variables == null || variables.length == 0) return pu.formatC(value);
+        if (variables == null || variables.length == 0) return BukkitUtils.parseColorComponent(value);
         for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
-        return pu.formatC(value);
+        return BukkitUtils.parseColorComponent(value);
     }
 }

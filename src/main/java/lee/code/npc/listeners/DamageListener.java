@@ -2,7 +2,7 @@ package lee.code.npc.listeners;
 
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import lee.code.npc.GoldmanNPC;
-import lee.code.npc.database.Cache;
+import lee.code.npc.database.CacheManager;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -16,17 +16,14 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onNPCDamage(EntityDamageByEntityEvent e) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         if (e.getEntity() instanceof Villager) {
-            String customName = e.getEntity().getCustomName();
-            if (customName != null) {
-                String name = plugin.getPU().unFormat(customName);
-                if (cache.isNPC(name)) {
-                    e.setCancelled(true);
-                    if (e.getDamager() instanceof Player player) {
-                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_DEATH, 1, 1);
-                    }
+            int id = plugin.getPU().getID(e.getEntity());
+            if (cacheManager.isNPC(id)) {
+                e.setCancelled(true);
+                if (e.getDamager() instanceof Player player) {
+                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_DEATH, 1, 1);
                 }
             }
         }
@@ -35,15 +32,12 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onNPCDamage(EntityDamageEvent e) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         if (e.getEntity() instanceof Villager) {
-            String customName = e.getEntity().getCustomName();
-            if (customName != null) {
-                String name = plugin.getPU().unFormat(customName);
-                if (cache.isNPC(name)) {
-                    e.setCancelled(true);
-                }
+            int id = plugin.getPU().getID(e.getEntity());
+            if (cacheManager.isNPC(id)) {
+                e.setCancelled(true);
             }
         }
     }
@@ -51,15 +45,12 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onNPCZap(EntityZapEvent e) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         if (e.getEntity() instanceof Villager) {
-            String customName = e.getEntity().getCustomName();
-            if (customName != null) {
-                String name = plugin.getPU().unFormat(customName);
-                if (cache.isNPC(name)) {
-                    e.setCancelled(true);
-                }
+            int id = plugin.getPU().getID(e.getEntity());
+            if (cacheManager.isNPC(id)) {
+                e.setCancelled(true);
             }
         }
     }

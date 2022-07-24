@@ -5,7 +5,7 @@ import lombok.Getter;
 import net.minecraft.world.entity.npc.VillagerType;
 
 @AllArgsConstructor
-public enum SupportedVillagerTypes {
+public enum NPCType {
 
     JUNGLE(VillagerType.JUNGLE),
     DESERT(VillagerType.DESERT),

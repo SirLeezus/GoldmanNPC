@@ -116,18 +116,18 @@
             <classifier>remapped-mojang</classifier>
             <scope>provided</scope>
         </dependency>
-        <!-- Redis Cache API -->
-        <dependency>
-            <groupId>lee.code.redis</groupId>
-            <artifactId>redis-cache</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- Lombok API -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- GoldmanCore API -->
+        <dependency>
+            <groupId>lee.code.core</groupId>
+            <artifactId>goldman-core</artifactId>
+            <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

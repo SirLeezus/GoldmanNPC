@@ -1,9 +1,10 @@
 package lee.code.npc.commands.subcommands;
 
+import lee.code.core.util.bukkit.BukkitUtils;
 import lee.code.npc.GoldmanNPC;
-import lee.code.npc.PU;
 import lee.code.npc.commands.SubCommand;
-import lee.code.npc.database.Cache;
+import lee.code.npc.database.CacheManager;
+import lee.code.npc.database.tables.NPCTable;
 import lee.code.npc.lists.Lang;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -36,18 +37,18 @@ public class Create extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        PU pu = plugin.getPU();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
 
         if (args.length > 1) {
             UUID uuid = player.getUniqueId();
-            String name = pu.buildStringFromArgs(args, 1);
+            String displayName = BukkitUtils.buildStringFromArgs(args, 1);
+            int nextId = cacheManager.getNextID();
             Location location = player.getLocation();
 
-            if (!cache.isNPC(name)) {
-                cache.createNPC(uuid, name, location, "NONE", "PLAINS", "n", "n");
-                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_CREATE_NPC_SUCCESSFUL.getComponent(new String[] { name })));
-            } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NAME_TAKEN.getComponent(new String[] { name })));
+            cacheManager.createNPCData(new NPCTable(nextId, displayName, BukkitUtils.serializeLocation(location)));
+            plugin.getData().setSelectedNPC(uuid, nextId);
+            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COMMAND_CREATE_NPC_SUCCESSFUL.getComponent(new String[] { displayName })));
+
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_CREATE_ARG.getComponent(null)));
     }
 

@@ -3,7 +3,7 @@ main: lee.code.npc.GoldmanNPC
 version: ${project.version}
 api-version: 1.19
 author: Lee
-depend: [RedisCache]
+depend: [GoldmanCore]
 commands:
   npc:
     description: Main plugin command.

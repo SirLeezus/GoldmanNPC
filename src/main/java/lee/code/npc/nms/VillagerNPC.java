@@ -12,6 +12,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.entity.player.Player;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 
@@ -25,26 +26,28 @@ public class VillagerNPC extends Villager {
         this.removeAI();
         this.setNoGravity(true);
         this.setInvulnerable(true);
-        this.setCustomName(Component.literal(name));
+        this.setCustomName(Component.Serializer.fromJson(name));
         this.setCustomNameVisible(true);
         this.setVillagerData(this.getVillagerData().setProfession(villagerProfession));
         this.setVillagerData(this.getVillagerData().setType(villagertype));
         this.setAge(1);
         this.setSilent(true);
         this.collides = false;
-        this.goalSelector.addGoal(0, new LookAtPlayerGoal(this, net.minecraft.world.entity.player.Player.class, 5, 100));
+        this.goalSelector.addGoal(0, new LookAtPlayerGoal(this, Player.class, 5, 100));
         this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
     }
 
     //stops the server from saving entity to chunk
     @Override
-    public boolean save(CompoundTag nbttagcompound){
+    public boolean save(CompoundTag compoundTag) {
         return false;
     }
 
     //stops the server from saving entity to chunk
     @Override
-    public void load(CompoundTag nbttagcompound) { }
+    public void load(CompoundTag compoundTag) {
+
+    }
 
     private void removeAI() {
 

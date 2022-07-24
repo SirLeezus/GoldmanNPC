@@ -1,9 +1,11 @@
 package lee.code.npc.commands.subcommands;
 
+import lee.code.npc.Data;
 import lee.code.npc.GoldmanNPC;
 import lee.code.npc.commands.SubCommand;
-import lee.code.npc.database.Cache;
+import lee.code.npc.database.CacheManager;
 import lee.code.npc.lists.Lang;
+import lee.code.npc.lists.NPCProfession;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -34,15 +36,16 @@ public class Profession extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
+        Data data = plugin.getData();
 
         if (args.length > 1) {
             UUID uuid = player.getUniqueId();
-            if (cache.hasNPCSelected(uuid)) {
+            if (data.hasSelectedNPC(uuid)) {
                 String profession = args[1];
-                if (plugin.getPU().getVillagerProfessions().contains(profession)) {
-                    String npcName = cache.getNPCSelected(uuid);
-                    cache.setNPCProfession(npcName, profession);
+                if (data.getVillagerProfessions().contains(profession)) {
+                    int id = data.getSelectedNPC(uuid);
+                    cacheManager.setNPCProfession(id, NPCProfession.valueOf(profession));
                 } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_PROFESSION_NOT_FOUND.getComponent(new String[] { profession })));
             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NO_SELECTED_NPC.getComponent(null)));
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_PROFESSION_ARG.getComponent(null)));

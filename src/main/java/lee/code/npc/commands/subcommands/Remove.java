@@ -1,8 +1,9 @@
 package lee.code.npc.commands.subcommands;
 
+import lee.code.npc.Data;
 import lee.code.npc.GoldmanNPC;
 import lee.code.npc.commands.SubCommand;
-import lee.code.npc.database.Cache;
+import lee.code.npc.database.CacheManager;
 import lee.code.npc.lists.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,13 +35,14 @@ public class Remove extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
+        Data data = plugin.getData();
         UUID uuid = player.getUniqueId();
 
-        if (cache.hasNPCSelected(uuid)) {
-            String npcName = cache.getNPCSelected(uuid);
-            cache.removeNPC(npcName);
-            cache.removeNPCSelected(uuid);
+        if (data.hasSelectedNPC(uuid)) {
+            int id = data.getSelectedNPC(uuid);
+            cacheManager.deleteNPC(id);
+            data.removeSelectedNPC(uuid);
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NO_SELECTED_NPC.getComponent(null)));
     }
 

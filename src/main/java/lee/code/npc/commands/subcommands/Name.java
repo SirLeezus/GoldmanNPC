@@ -1,9 +1,10 @@
 package lee.code.npc.commands.subcommands;
 
+import lee.code.core.util.bukkit.BukkitUtils;
+import lee.code.npc.Data;
 import lee.code.npc.GoldmanNPC;
-import lee.code.npc.PU;
 import lee.code.npc.commands.SubCommand;
-import lee.code.npc.database.Cache;
+import lee.code.npc.database.CacheManager;
 import lee.code.npc.lists.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,18 +36,15 @@ public class Name extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         GoldmanNPC plugin = GoldmanNPC.getPlugin();
-        PU pu = plugin.getPU();
-        Cache cache = plugin.getCache();
+        CacheManager cacheManager = plugin.getCacheManager();
+        Data data = plugin.getData();
 
         if (args.length > 1) {
             UUID uuid = player.getUniqueId();
-            if (cache.hasNPCSelected(uuid)) {
-                String oldName = cache.getNPCSelected(uuid);
-                String newName = pu.buildStringFromArgs(args, 1);
-
-                if (!cache.isNPC(newName)) {
-                    cache.setNPCName(uuid, oldName, newName);
-                } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NAME_TAKEN.getComponent(new String[] { newName })));
+            if (data.hasSelectedNPC(uuid)) {
+                int id = data.getSelectedNPC(uuid);
+                String newName = BukkitUtils.buildStringFromArgs(args, 1);
+                cacheManager.setNPCDisplayName(id, newName);
             } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_NO_SELECTED_NPC.getComponent(null)));
         } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_NAME_ARG.getComponent(null)));
     }
