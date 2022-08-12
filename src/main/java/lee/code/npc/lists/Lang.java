@@ -35,7 +35,6 @@ public enum Lang {
     PREVIOUS_PAGE_HOVER("&6&lPrevious Page"),
     NEXT_PAGE_TEXT("&2&lNext &a&l>>--------"),
     PREVIOUS_PAGE_TEXT("&a&l--------<< &2&lPrev"),
-    CONNECTING("&6Connecting you to server &e{0}&6..."),
     ;
 
     @Getter private final String string;

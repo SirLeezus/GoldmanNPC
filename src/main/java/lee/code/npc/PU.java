@@ -1,8 +1,8 @@
 package lee.code.npc;
 
+import lee.code.core.util.bukkit.BukkitUtils;
 import lee.code.npc.database.CacheManager;
 import lee.code.npc.lists.CommandType;
-import lee.code.npc.lists.Lang;
 import lee.code.npc.lists.NPCProfession;
 import lee.code.npc.lists.NPCType;
 import lee.code.npc.nms.VillagerNPC;
@@ -20,9 +20,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,7 +33,7 @@ public class PU {
                 Bukkit.dispatchCommand(console, run);
             }
             case PLAYER -> player.chat(command);
-            case NETWORK -> sendPlayerServer(player, command);
+            case NETWORK -> BukkitUtils.sendPlayerServer(player, command);
         }
     }
 
@@ -112,18 +109,5 @@ public class PU {
         PersistentDataContainer container = entity.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(GoldmanNPC.getPlugin(), "npc");
         return container.getOrDefault(key, PersistentDataType.INTEGER, 0);
-    }
-
-    public void sendPlayerServer(Player player, String server) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
-        try {
-            dataOutputStream.writeUTF("Connect");
-            dataOutputStream.writeUTF(server);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        player.sendPluginMessage(GoldmanNPC.getPlugin(), "BungeeCord", byteArrayOutputStream.toByteArray());
-        player.sendMessage(Lang.CONNECTING.getComponent(new String[] { server }));
     }
 }
