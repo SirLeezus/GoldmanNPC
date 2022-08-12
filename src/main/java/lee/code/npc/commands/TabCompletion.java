@@ -32,7 +32,7 @@ public class TabCompletion implements TabCompleter {
             } else if (args[0].equals("profession")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], plugin.getData().getVillagerProfessions(), new ArrayList<>());
             } else if (args[0].equals("command")) {
-                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("CONSOLE", "PLAYER"), new ArrayList<>());
+                if (args.length == 2) return StringUtil.copyPartialMatches(args[1], Arrays.asList("CONSOLE", "PLAYER", "NETWORK"), new ArrayList<>());
             } else if (args[0].equals("tp")) {
                 if (args.length == 2) return StringUtil.copyPartialMatches(args[1], cacheManager.getAllIDString(), new ArrayList<>());
             }

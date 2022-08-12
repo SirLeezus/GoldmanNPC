@@ -29,6 +29,7 @@ public class GoldmanNPC extends JavaPlugin {
         databaseManager.initialize();
         data.loadData();
         pU.removeNPCs();
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     @Override
