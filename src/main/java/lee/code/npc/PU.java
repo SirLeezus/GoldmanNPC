@@ -6,6 +6,7 @@ import lee.code.npc.lists.CommandType;
 import lee.code.npc.lists.NPCProfession;
 import lee.code.npc.lists.NPCType;
 import lee.code.npc.nms.VillagerNPC;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -109,5 +110,37 @@ public class PU {
         PersistentDataContainer container = entity.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(GoldmanNPC.getPlugin(), "npc");
         return container.getOrDefault(key, PersistentDataType.INTEGER, 0);
+    }
+
+    public void updatePlaceholders(int id, Entity entity) {
+        CacheManager cacheManager =  GoldmanNPC.getPlugin().getCacheManager();
+        String name = cacheManager.getNPCDisplayName(id);
+        name = name.replaceAll("%advancement-online%", String.valueOf(BukkitUtils.getServerPlayerCount("advancement")));
+        name = name.replaceAll("%chaos-online%", String.valueOf(BukkitUtils.getServerPlayerCount("chaos")));
+        name = name.replaceAll("%vanilla-online%", String.valueOf(BukkitUtils.getServerPlayerCount("vanilla")));
+        entity.customName(BukkitUtils.parseColorComponent(name));
+    }
+
+    public void schedulePlaceholderChecker() {
+        GoldmanNPC plugin = GoldmanNPC.getPlugin();
+        CacheManager cacheManager = plugin.getCacheManager();
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            Map<Integer, Location> npcs = cacheManager.getNPCLocations();
+            if (npcs.isEmpty()) return;
+
+            for (Map.Entry<Integer, Location> npc : npcs.entrySet()) {
+                if (cacheManager.hasPlaceholders(npc.getKey())) {
+                    for (Entity entity : npc.getValue().getChunk().getEntities()) {
+                        if (entity instanceof Villager) {
+                            int id = getID(entity);
+                            if (npc.getKey().equals(id)) {
+                                updatePlaceholders(id, entity);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }), 0L, 20L * 5);
     }
 }

@@ -8,6 +8,8 @@ import net.kyori.adventure.text.Component;
 @AllArgsConstructor
 public enum Lang {
     PREFIX("&b&lNPC &3➔ &r"),
+    ON("&2&lON"),
+    OFF("&c&lOFF"),
     MESSAGE_HELP_DIVIDER("&b▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
     MESSAGE_HELP_TITLE("                      &6-== &3&l&nNPC Help&r &6==-"),
     MESSAGE_HELP_SUB_COMMAND_HOVER("&6{0}"),
@@ -30,6 +32,7 @@ public enum Lang {
     COMMAND_SELECT_NPC_SUCCESSFUL("&aYou successfully selected the NPC &e(&f{0}&e)&a!"),
     COMMAND_CREATE_NPC_SUCCESSFUL("&aYou successfully created the NPC &e(&f{0}&e)&a!"),
     COMMAND_COMMAND_ADDED_SUCCESSFUL("&aYou successfully set the command &6{0} &ato the NPC &e(&f{1}&e)&a!"),
+    COMMAND_COMMAND_PLACEHOLDERS_SUCCESSFUL("&aYou successfully set placeholders to &6{0} &afor the NPC &e(&f{1}&e)&a!"),
     PAGE_SPACER(" &e| "),
     NEXT_PAGE_HOVER("&6&lNext Page"),
     PREVIOUS_PAGE_HOVER("&6&lPrevious Page"),

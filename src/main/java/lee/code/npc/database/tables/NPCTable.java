@@ -36,6 +36,9 @@ public class NPCTable {
     @DatabaseField(columnName = "command_type", canBeNull = false)
     private String commandType;
 
+    @DatabaseField(columnName = "placeholders", canBeNull = false)
+    private boolean placeholders;
+
     public NPCTable(int id, String displayName, String location) {
         this.id = id;
         this.displayName = displayName;
@@ -44,5 +47,6 @@ public class NPCTable {
         this.type = NPCType.PLAINS.name();
         this.command = "0";
         this.commandType = CommandType.PLAYER.name();
+        this.placeholders = false;
     }
 }

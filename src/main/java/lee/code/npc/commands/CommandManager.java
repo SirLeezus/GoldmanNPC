@@ -28,6 +28,7 @@ public class CommandManager implements CommandExecutor {
         subCommands.add(new Profession());
         subCommands.add(new Name());
         subCommands.add(new RunCommand());
+        subCommands.add(new Placeholders());
     }
 
     @Override

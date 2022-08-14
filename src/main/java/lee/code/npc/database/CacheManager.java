@@ -158,4 +158,14 @@ public class CacheManager {
     public int getNextID() {
         return getNpcCache().asMap().keySet().size() + 1;
     }
+
+    public boolean hasPlaceholders(int id) {
+        return getNPCTable(id).isPlaceholders();
+    }
+
+    public void setPlaceholders(int id, boolean result) {
+        NPCTable npcTable = getNPCTable(id);
+        npcTable.setPlaceholders(result);
+        updateNPCData(npcTable);
+    }
 }

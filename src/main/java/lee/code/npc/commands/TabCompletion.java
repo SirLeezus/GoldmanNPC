@@ -13,7 +13,7 @@ import java.util.*;
 
 public class TabCompletion implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("create", "remove", "list", "select", "tp", "location", "type", "profession", "name", "command");
+    private final List<String> subCommands = Arrays.asList("create", "remove", "list", "select", "tp", "location", "type", "profession", "name", "command", "placeholders");
     private final List<String> blank = new ArrayList<>();
 
     @Override

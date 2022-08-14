@@ -46,6 +46,14 @@ public class DatabaseManager {
         }
     }
 
+    public void update() {
+        try {
+            npcDao.executeRaw("ALTER TABLE `npc` ADD COLUMN placeholders BOOLEAN NOT NULL DEFAULT 'false';");
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void createTables() throws SQLException {
         CacheManager cacheManager = GoldmanNPC.getPlugin().getCacheManager();
 

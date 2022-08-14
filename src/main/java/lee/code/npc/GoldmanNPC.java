@@ -29,6 +29,7 @@ public class GoldmanNPC extends JavaPlugin {
         databaseManager.initialize();
         data.loadData();
         pU.removeNPCs();
+        pU.schedulePlaceholderChecker();
     }
 
     @Override
